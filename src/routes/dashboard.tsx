@@ -19,10 +19,10 @@ export const Route = createFileRoute("/dashboard")({
 });
 
 const STATS = [
-  { label: "Interviews completed", value: "24", delta: "+6 this week", icon: Trophy, accent: "from-violet-500 to-blue-500" },
-  { label: "Avg. score", value: "8.2", delta: "+0.4 vs last week", icon: TrendingUp, accent: "from-emerald-500 to-teal-500" },
+  { label: "Total interviews", value: "24", delta: "+6 this week", icon: Trophy, accent: "from-violet-500 to-blue-500" },
+  { label: "Average score", value: "8.2", delta: "+0.4 vs last week", icon: TrendingUp, accent: "from-emerald-500 to-teal-500" },
+  { label: "Best score", value: "9.4", delta: "System Design", icon: Flame, accent: "from-orange-500 to-pink-500" },
   { label: "Practice time", value: "12h 40m", delta: "Goal: 15h", icon: Clock, accent: "from-blue-500 to-cyan-500" },
-  { label: "Current streak", value: "7 days", delta: "Personal best", icon: Flame, accent: "from-orange-500 to-pink-500" },
 ];
 
 const RECENT = [
