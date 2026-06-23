@@ -25,7 +25,7 @@ export function SiteHeader() {
             <a href="/#pricing" className="transition-colors hover:text-foreground">Pricing</a>
           </nav>
           <div className="flex items-center gap-2">
-            <Link to="/dashboard" className="hidden text-sm text-muted-foreground transition-colors hover:text-foreground md:inline">Sign in</Link>
+            <Link to="/login" className="hidden text-sm text-muted-foreground transition-colors hover:text-foreground md:inline">Sign in</Link>
             <Link
               to="/dashboard"
               className="inline-flex h-9 items-center rounded-full bg-gradient-brand px-4 text-sm font-medium text-white shadow-glow transition-transform hover:scale-[1.02]"
