@@ -1,0 +1,157 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { SiteHeader } from "@/components/site-header";
+import {
+  ArrowUpRight,
+  Plus,
+  TrendingUp,
+  Clock,
+  Trophy,
+  Flame,
+  Code2,
+  MessageSquare,
+  Layers,
+  ChevronRight,
+} from "lucide-react";
+
+export const Route = createFileRoute("/dashboard")({
+  head: () => ({ meta: [{ title: "Dashboard — PrepVerse" }] }),
+  component: Dashboard,
+});
+
+const STATS = [
+  { label: "Interviews completed", value: "24", delta: "+6 this week", icon: Trophy, accent: "from-violet-500 to-blue-500" },
+  { label: "Avg. score", value: "8.2", delta: "+0.4 vs last week", icon: TrendingUp, accent: "from-emerald-500 to-teal-500" },
+  { label: "Practice time", value: "12h 40m", delta: "Goal: 15h", icon: Clock, accent: "from-blue-500 to-cyan-500" },
+  { label: "Current streak", value: "7 days", delta: "Personal best", icon: Flame, accent: "from-orange-500 to-pink-500" },
+];
+
+const RECENT = [
+  { title: "System Design — URL Shortener", type: "System Design", score: 8.6, time: "2h ago", icon: Layers },
+  { title: "Behavioral — Conflict Resolution", type: "Behavioral", score: 7.9, time: "Yesterday", icon: MessageSquare },
+  { title: "DSA — Graph Algorithms", type: "Technical", score: 8.1, time: "2 days ago", icon: Code2 },
+  { title: "System Design — Chat App", type: "System Design", score: 7.4, time: "3 days ago", icon: Layers },
+];
+
+const TRACKS = [
+  { name: "Frontend Engineer", progress: 68, color: "from-violet-500 to-fuchsia-500" },
+  { name: "Backend Engineer", progress: 42, color: "from-blue-500 to-cyan-500" },
+  { name: "System Design", progress: 81, color: "from-emerald-500 to-teal-500" },
+];
+
+function Dashboard() {
+  return (
+    <div className="min-h-screen bg-background">
+      <SiteHeader />
+      <main className="mx-auto max-w-7xl px-6 py-10">
+        {/* Greeting */}
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="text-sm text-muted-foreground">Good morning, Alex</p>
+            <h1 className="mt-1 text-3xl font-semibold tracking-tight md:text-4xl">
+              Let's land that offer.
+            </h1>
+          </div>
+          <Link
+            to="/interview"
+            className="group inline-flex h-11 items-center gap-2 rounded-full bg-gradient-brand px-5 text-sm font-medium text-white shadow-glow transition-transform hover:scale-[1.02]"
+          >
+            <Plus className="h-4 w-4" /> Start new interview
+          </Link>
+        </div>
+
+        {/* Stats */}
+        <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {STATS.map((s) => (
+            <div key={s.label} className="group relative overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-soft hover-lift">
+              <div className={`absolute -right-6 -top-6 h-24 w-24 rounded-full bg-gradient-to-br ${s.accent} opacity-10 blur-2xl`} />
+              <div className="flex items-center justify-between">
+                <div className={`inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br ${s.accent} text-white shadow-soft`}>
+                  <s.icon className="h-4 w-4" />
+                </div>
+                <ArrowUpRight className="h-4 w-4 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
+              </div>
+              <div className="mt-4 text-3xl font-semibold tracking-tight">{s.value}</div>
+              <div className="mt-1 text-xs text-muted-foreground">{s.label}</div>
+              <div className="mt-3 text-xs font-medium text-brand">{s.delta}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_360px]">
+          {/* Recent */}
+          <section className="rounded-2xl border border-border bg-card shadow-soft">
+            <div className="flex items-center justify-between border-b border-border px-6 py-4">
+              <div>
+                <h2 className="text-base font-semibold tracking-tight">Recent interviews</h2>
+                <p className="text-xs text-muted-foreground">Pick up where you left off</p>
+              </div>
+              <Link to="/history" className="inline-flex items-center gap-1 text-xs font-medium text-brand hover:underline">
+                View all <ChevronRight className="h-3 w-3" />
+              </Link>
+            </div>
+            <ul className="divide-y divide-border">
+              {RECENT.map((r) => (
+                <li key={r.title}>
+                  <Link to="/results" className="group flex items-center gap-4 px-6 py-4 transition-colors hover:bg-secondary/50">
+                    <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-soft text-brand">
+                      <r.icon className="h-4 w-4" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-sm font-medium">{r.title}</div>
+                      <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
+                        <span>{r.type}</span><span>•</span><span>{r.time}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="text-right">
+                        <div className="text-sm font-semibold text-gradient-brand">{r.score}</div>
+                        <div className="text-[10px] text-muted-foreground">/ 10</div>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          {/* Tracks */}
+          <section className="space-y-6">
+            <div className="rounded-2xl border border-border bg-card p-6 shadow-soft">
+              <h2 className="text-base font-semibold tracking-tight">Your tracks</h2>
+              <p className="text-xs text-muted-foreground">Progress toward role readiness</p>
+              <div className="mt-5 space-y-5">
+                {TRACKS.map((t) => (
+                  <div key={t.name}>
+                    <div className="mb-1.5 flex items-center justify-between text-xs">
+                      <span className="font-medium">{t.name}</span>
+                      <span className="text-muted-foreground">{t.progress}%</span>
+                    </div>
+                    <div className="h-2 overflow-hidden rounded-full bg-secondary">
+                      <div className={`h-full rounded-full bg-gradient-to-r ${t.color}`} style={{ width: `${t.progress}%` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="relative overflow-hidden rounded-2xl border border-border bg-gradient-brand p-6 text-white shadow-elevated">
+              <div className="absolute inset-0 bg-mesh opacity-30" />
+              <div className="relative">
+                <div className="text-xs font-medium uppercase tracking-wider text-white/80">Recommended next</div>
+                <h3 className="mt-2 text-lg font-semibold">System Design — Rate Limiter</h3>
+                <p className="mt-1 text-sm text-white/85">Based on your last two sessions.</p>
+                <Link
+                  to="/interview"
+                  className="mt-4 inline-flex h-9 items-center gap-1.5 rounded-full bg-white px-4 text-xs font-medium text-foreground shadow-soft transition-transform hover:scale-[1.02]"
+                >
+                  Start now <ArrowUpRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  );
+}
