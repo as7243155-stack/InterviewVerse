@@ -204,6 +204,30 @@ function ResultsPage() {
           </div>
         </div>
 
+        {/* Suggestions */}
+        <div className="mt-6 rounded-2xl border border-border bg-card p-6 shadow-soft">
+          <div className="flex items-center gap-2">
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-gradient-brand text-white shadow-glow">
+              <Sparkles className="h-3.5 w-3.5" />
+            </span>
+            <h3 className="text-base font-semibold tracking-tight">Suggestions to level up</h3>
+          </div>
+          <p className="mt-1 text-xs text-muted-foreground">Targeted next steps based on this session.</p>
+          <div className="mt-5 grid gap-3 md:grid-cols-3">
+            {[
+              { title: "Drill: Capacity estimation", body: "Practice back-of-envelope math for QPS, storage, and bandwidth.", tag: "15 min" },
+              { title: "Read: Designing Data-Intensive Apps — Ch. 6", body: "Sharpen partitioning and replication trade-offs.", tag: "Reading" },
+              { title: "Mock: Edge-case focused", body: "Run a session emphasizing failure modes and recovery.", tag: "20 min" },
+            ].map((s) => (
+              <div key={s.title} className="group rounded-xl border border-border bg-background p-4 transition-all hover:border-brand/40 hover:shadow-soft">
+                <div className="inline-flex items-center rounded-full bg-gradient-soft px-2 py-0.5 text-[10px] font-medium text-brand">{s.tag}</div>
+                <div className="mt-2 text-sm font-semibold">{s.title}</div>
+                <p className="mt-1 text-xs text-muted-foreground">{s.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* CTA */}
         <div className="mt-6 relative overflow-hidden rounded-2xl border border-border bg-gradient-brand p-6 text-white shadow-elevated">
           <div className="absolute inset-0 bg-mesh opacity-30" />

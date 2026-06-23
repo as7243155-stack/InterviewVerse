@@ -10,12 +10,33 @@ import {
   Clock,
   X,
   Lightbulb,
+  Briefcase,
+  Layers,
+  Code2,
+  MessageSquare,
 } from "lucide-react";
 
 export const Route = createFileRoute("/interview")({
   head: () => ({ meta: [{ title: "Interview — PrepVerse" }] }),
   component: InterviewPage,
 });
+
+const ROLES = [
+  { id: "frontend", label: "Frontend Engineer", icon: Code2 },
+  { id: "backend", label: "Backend Engineer", icon: Layers },
+  { id: "fullstack", label: "Full-Stack Engineer", icon: Briefcase },
+  { id: "sysdesign", label: "System Design", icon: Layers },
+  { id: "behavioral", label: "Behavioral", icon: MessageSquare },
+  { id: "data", label: "Data / ML Engineer", icon: Code2 },
+];
+
+const LEVELS = [
+  { id: "intern", label: "Intern", hint: "0–1 yrs" },
+  { id: "junior", label: "Junior", hint: "1–3 yrs" },
+  { id: "mid", label: "Mid-level", hint: "3–5 yrs" },
+  { id: "senior", label: "Senior", hint: "5–8 yrs" },
+  { id: "staff", label: "Staff+", hint: "8+ yrs" },
+];
 
 const QUESTIONS = [
   "Design a URL shortener that scales to 100M requests per day. Walk me through your data model, traffic estimation, and how you'd handle hot keys.",
@@ -26,16 +47,121 @@ const QUESTIONS = [
 ];
 
 function InterviewPage() {
+  const [stage, setStage] = useState<"setup" | "interview">("setup");
+  const [role, setRole] = useState("sysdesign");
+  const [level, setLevel] = useState("senior");
+
+  if (stage === "setup") {
+    return <SetupView role={role} setRole={setRole} level={level} setLevel={setLevel} onStart={() => setStage("interview")} />;
+  }
+  return <InterviewView role={role} level={level} />;
+}
+
+function SetupView({
+  role, setRole, level, setLevel, onStart,
+}: {
+  role: string; setRole: (v: string) => void;
+  level: string; setLevel: (v: string) => void;
+  onStart: () => void;
+}) {
+  return (
+    <div className="min-h-screen bg-background">
+      <SiteHeader />
+      <main className="mx-auto max-w-4xl px-6 py-12">
+        <Link to="/dashboard" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">
+          <ArrowLeft className="h-4 w-4" /> Back to dashboard
+        </Link>
+
+        <div className="mt-6">
+          <div className="text-xs font-medium uppercase tracking-wider text-brand">New session</div>
+          <h1 className="mt-1 text-3xl font-semibold tracking-tight md:text-4xl">Set up your interview</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Choose a role and experience level. We'll generate questions tailored to you.
+          </p>
+        </div>
+
+        <section className="mt-8 rounded-2xl border border-border bg-card p-6 shadow-soft">
+          <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Role</div>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {ROLES.map((r) => {
+              const active = role === r.id;
+              return (
+                <button
+                  key={r.id}
+                  onClick={() => setRole(r.id)}
+                  className={`group relative overflow-hidden rounded-xl border p-4 text-left transition-all ${
+                    active
+                      ? "border-transparent bg-gradient-soft shadow-soft ring-1 ring-brand/40"
+                      : "border-border bg-background hover:border-brand/40 hover:bg-secondary/50"
+                  }`}
+                >
+                  <div className={`inline-flex h-9 w-9 items-center justify-center rounded-lg ${active ? "bg-gradient-brand text-white shadow-glow" : "bg-secondary text-foreground"}`}>
+                    <r.icon className="h-4 w-4" />
+                  </div>
+                  <div className="mt-3 text-sm font-medium">{r.label}</div>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="mt-6 rounded-2xl border border-border bg-card p-6 shadow-soft">
+          <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Experience level</div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {LEVELS.map((l) => {
+              const active = level === l.id;
+              return (
+                <button
+                  key={l.id}
+                  onClick={() => setLevel(l.id)}
+                  className={`inline-flex h-11 items-center gap-2 rounded-full px-4 text-sm font-medium transition-all ${
+                    active
+                      ? "bg-gradient-brand text-white shadow-glow"
+                      : "border border-border bg-background text-foreground hover:bg-secondary"
+                  }`}
+                >
+                  {l.label}
+                  <span className={`text-xs ${active ? "text-white/80" : "text-muted-foreground"}`}>{l.hint}</span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-gradient-soft p-5">
+          <div className="flex items-center gap-3">
+            <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-brand text-white shadow-glow">
+              <Sparkles className="h-4 w-4" />
+            </span>
+            <div>
+              <div className="text-sm font-semibold">Ready to start</div>
+              <div className="text-xs text-muted-foreground">5 adaptive questions • ~25 min</div>
+            </div>
+          </div>
+          <button
+            onClick={onStart}
+            className="inline-flex h-11 items-center gap-2 rounded-full bg-gradient-brand px-5 text-sm font-medium text-white shadow-glow transition-transform hover:scale-[1.02]"
+          >
+            Generate questions <ArrowRight className="h-4 w-4" />
+          </button>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function InterviewView({ role, level }: { role: string; level: string }) {
   const [i, setI] = useState(0);
   const [answer, setAnswer] = useState("");
   const [recording, setRecording] = useState(false);
   const progress = ((i + 1) / QUESTIONS.length) * 100;
+  const roleLabel = ROLES.find((r) => r.id === role)?.label ?? "Interview";
+  const levelLabel = LEVELS.find((l) => l.id === level)?.label ?? "";
 
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <main className="mx-auto max-w-5xl px-6 py-10">
-        {/* Top bar */}
         <div className="flex items-center justify-between">
           <Link to="/dashboard" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">
             <X className="h-4 w-4" /> Exit interview
@@ -45,7 +171,6 @@ function InterviewPage() {
           </div>
         </div>
 
-        {/* Progress */}
         <div className="mt-6">
           <div className="flex items-center justify-between text-xs">
             <span className="font-medium tracking-wide text-muted-foreground">
@@ -57,9 +182,7 @@ function InterviewPage() {
             {QUESTIONS.map((_, idx) => (
               <div key={idx} className="h-1.5 flex-1 overflow-hidden rounded-full bg-secondary">
                 <div
-                  className={`h-full rounded-full transition-all duration-500 ${
-                    idx <= i ? "bg-gradient-brand" : "bg-transparent"
-                  }`}
+                  className={`h-full rounded-full transition-all duration-500 ${idx <= i ? "bg-gradient-brand" : "bg-transparent"}`}
                   style={{ width: idx <= i ? "100%" : "0%" }}
                 />
               </div>
@@ -67,7 +190,6 @@ function InterviewPage() {
           </div>
         </div>
 
-        {/* Question card */}
         <div className="relative mt-8">
           <div className="absolute -inset-2 rounded-3xl bg-gradient-brand opacity-10 blur-2xl" />
           <div className="relative rounded-2xl border border-border bg-card p-8 shadow-elevated">
@@ -76,7 +198,7 @@ function InterviewPage() {
                 <Sparkles className="h-4 w-4" />
               </div>
               <div>
-                <div className="text-xs font-medium uppercase tracking-wider text-brand">System Design</div>
+                <div className="text-xs font-medium uppercase tracking-wider text-brand">{roleLabel} • {levelLabel}</div>
                 <h1 className="mt-1 text-2xl font-semibold tracking-tight md:text-[28px] leading-snug">
                   {QUESTIONS[i]}
                 </h1>
@@ -90,16 +212,13 @@ function InterviewPage() {
           </div>
         </div>
 
-        {/* Answer area */}
         <div className="mt-6 rounded-2xl border border-border bg-card shadow-soft">
           <div className="flex items-center justify-between border-b border-border px-5 py-3">
             <div className="text-xs font-medium text-muted-foreground">Your answer</div>
             <button
               onClick={() => setRecording((r) => !r)}
               className={`inline-flex h-8 items-center gap-2 rounded-full px-3 text-xs font-medium transition-colors ${
-                recording
-                  ? "bg-destructive/10 text-destructive"
-                  : "bg-secondary text-foreground hover:bg-accent"
+                recording ? "bg-destructive/10 text-destructive" : "bg-secondary text-foreground hover:bg-accent"
               }`}
             >
               {recording ? (
@@ -126,7 +245,6 @@ function InterviewPage() {
           />
         </div>
 
-        {/* Nav */}
         <div className="mt-6 flex items-center justify-between">
           <button
             onClick={() => setI((v) => Math.max(0, v - 1))}
