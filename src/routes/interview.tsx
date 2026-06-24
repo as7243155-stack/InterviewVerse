@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SiteHeader } from "@/components/site-header";
 import {
   Mic,
@@ -14,6 +14,9 @@ import {
   Layers,
   Code2,
   MessageSquare,
+  Wand2,
+  Check,
+  Loader2,
 } from "lucide-react";
 
 export const Route = createFileRoute("/interview")({
