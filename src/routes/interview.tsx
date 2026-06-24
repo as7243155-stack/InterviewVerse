@@ -197,12 +197,88 @@ function SetupView({
   );
 }
 
-function InterviewView({ role, level }: { role: string; level: string }) {
+const LOADING_STEPS = [
+  "Analyzing role",
+  "Generating interview questions",
+  "Preparing session",
+];
+
+function LoadingView({ onDone }: { onDone: () => void }) {
+  const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    if (step >= LOADING_STEPS.length) {
+      const t = setTimeout(onDone, 400);
+      return () => clearTimeout(t);
+    }
+    const t = setTimeout(() => setStep((s) => s + 1), 900);
+    return () => clearTimeout(t);
+  }, [step, onDone]);
+
+  return (
+    <div className="min-h-screen bg-background">
+      <SiteHeader />
+      <main className="mx-auto flex max-w-2xl flex-col items-center px-6 py-20">
+        <div className="relative">
+          <div className="absolute -inset-6 rounded-full bg-gradient-brand opacity-20 blur-2xl" />
+          <div className="relative inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-brand text-white shadow-glow">
+            <Sparkles className="h-7 w-7" />
+          </div>
+        </div>
+        <h1 className="mt-6 text-2xl font-semibold tracking-tight md:text-3xl">Crafting your interview</h1>
+        <p className="mt-2 text-sm text-muted-foreground">PrepVerse AI is tailoring questions just for you.</p>
+
+        <div className="mt-10 w-full rounded-2xl border border-border bg-card p-6 shadow-soft">
+          <ul className="space-y-4">
+            {LOADING_STEPS.map((label, idx) => {
+              const done = idx < step;
+              const active = idx === step;
+              return (
+                <li key={label} className="flex items-center gap-3">
+                  <span
+                    className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-all ${
+                      done
+                        ? "bg-gradient-brand text-white shadow-glow"
+                        : active
+                        ? "bg-accent text-brand"
+                        : "bg-secondary text-muted-foreground"
+                    }`}
+                  >
+                    {done ? (
+                      <Check className="h-3.5 w-3.5" />
+                    ) : active ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                    )}
+                  </span>
+                  <span
+                    className={`text-sm transition-colors ${
+                      done ? "text-foreground" : active ? "text-foreground" : "text-muted-foreground"
+                    }`}
+                  >
+                    {label}
+                    {active && <span className="ml-1 text-muted-foreground">…</span>}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function InterviewView({ role, level, customRole }: { role: string; level: string; customRole: string }) {
   const [i, setI] = useState(0);
   const [answer, setAnswer] = useState("");
   const [recording, setRecording] = useState(false);
   const progress = ((i + 1) / QUESTIONS.length) * 100;
-  const roleLabel = ROLES.find((r) => r.id === role)?.label ?? "Interview";
+  const roleLabel =
+    role === "custom"
+      ? customRole.trim() || "Custom Role"
+      : ROLES.find((r) => r.id === role)?.label ?? "Interview";
   const levelLabel = LEVELS.find((l) => l.id === level)?.label ?? "";
 
   return (
