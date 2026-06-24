@@ -31,6 +31,16 @@ const ROLES = [
   { id: "sysdesign", label: "System Design", icon: Layers },
   { id: "behavioral", label: "Behavioral", icon: MessageSquare },
   { id: "data", label: "Data / ML Engineer", icon: Code2 },
+  { id: "custom", label: "Custom Role", icon: Wand2 },
+];
+
+const CUSTOM_PLACEHOLDERS = [
+  "Java Developer",
+  "Python Developer",
+  "DevOps Engineer",
+  "QA Engineer",
+  "Data Analyst",
+  "SDE Intern",
 ];
 
 const LEVELS = [
