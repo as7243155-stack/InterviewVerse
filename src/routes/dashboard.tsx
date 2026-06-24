@@ -19,17 +19,16 @@ export const Route = createFileRoute("/dashboard")({
 });
 
 const STATS = [
-  { label: "Total interviews", value: "24", delta: "+6 this week", icon: Trophy, accent: "from-violet-500 to-blue-500" },
-  { label: "Average score", value: "8.2", delta: "+0.4 vs last week", icon: TrendingUp, accent: "from-emerald-500 to-teal-500" },
-  { label: "Best score", value: "9.4", delta: "System Design", icon: Flame, accent: "from-orange-500 to-pink-500" },
-  { label: "Practice time", value: "12h 40m", delta: "Goal: 15h", icon: Clock, accent: "from-blue-500 to-cyan-500" },
+  { label: "Total interviews", value: "5", delta: "+2 this week", icon: Trophy, accent: "from-violet-500 to-blue-500" },
+  { label: "Average score", value: "7.8", delta: "Across all sessions", icon: TrendingUp, accent: "from-emerald-500 to-teal-500" },
+  { label: "Best score", value: "8.6", delta: "System Design", icon: Flame, accent: "from-orange-500 to-pink-500" },
+  { label: "Practice time", value: "2h 10m", delta: "This week", icon: Clock, accent: "from-blue-500 to-cyan-500" },
 ];
 
 const RECENT = [
   { title: "System Design — URL Shortener", type: "System Design", score: 8.6, time: "2h ago", icon: Layers },
   { title: "Behavioral — Conflict Resolution", type: "Behavioral", score: 7.9, time: "Yesterday", icon: MessageSquare },
-  { title: "DSA — Graph Algorithms", type: "Technical", score: 8.1, time: "2 days ago", icon: Code2 },
-  { title: "System Design — Chat App", type: "System Design", score: 7.4, time: "3 days ago", icon: Layers },
+  { title: "DSA — Graph Algorithms", type: "Technical", score: 7.4, time: "2 days ago", icon: Code2 },
 ];
 
 const TRACKS = [
