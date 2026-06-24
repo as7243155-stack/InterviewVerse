@@ -50,7 +50,7 @@ function ResultsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader />
+      <SiteHeader variant="app" />
       <main className="mx-auto max-w-7xl px-6 py-10">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
@@ -59,8 +59,13 @@ function ResultsPage() {
             <p className="mt-1 text-sm text-muted-foreground">5 questions • 24 min • Senior level</p>
           </div>
           <div className="flex gap-2">
-            <button className="inline-flex h-10 items-center gap-2 rounded-full border border-border bg-card px-4 text-sm font-medium shadow-soft hover:bg-secondary">
+            <button
+              disabled
+              title="Coming soon"
+              className="inline-flex h-10 cursor-not-allowed items-center gap-2 rounded-full border border-border bg-card px-4 text-sm font-medium text-muted-foreground opacity-60 shadow-soft"
+            >
               <Download className="h-4 w-4" /> Export PDF
+              <span className="ml-1 rounded-full bg-secondary px-2 py-0.5 text-[10px] font-medium text-foreground/70">Soon</span>
             </button>
             <Link to="/interview" className="inline-flex h-10 items-center gap-2 rounded-full bg-gradient-brand px-4 text-sm font-medium text-white shadow-glow transition-transform hover:scale-[1.02]">
               <RefreshCw className="h-4 w-4" /> Retry
