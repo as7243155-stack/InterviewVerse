@@ -60,23 +60,40 @@ const QUESTIONS = [
 ];
 
 function InterviewPage() {
-  const [stage, setStage] = useState<"setup" | "interview">("setup");
+  const [stage, setStage] = useState<"setup" | "loading" | "interview">("setup");
   const [role, setRole] = useState("sysdesign");
+  const [customRole, setCustomRole] = useState("");
   const [level, setLevel] = useState("senior");
 
   if (stage === "setup") {
-    return <SetupView role={role} setRole={setRole} level={level} setLevel={setLevel} onStart={() => setStage("interview")} />;
+    return (
+      <SetupView
+        role={role}
+        setRole={setRole}
+        customRole={customRole}
+        setCustomRole={setCustomRole}
+        level={level}
+        setLevel={setLevel}
+        onStart={() => setStage("loading")}
+      />
+    );
   }
-  return <InterviewView role={role} level={level} />;
+  if (stage === "loading") {
+    return <LoadingView onDone={() => setStage("interview")} />;
+  }
+  return <InterviewView role={role} level={level} customRole={customRole} />;
 }
 
 function SetupView({
-  role, setRole, level, setLevel, onStart,
+  role, setRole, customRole, setCustomRole, level, setLevel, onStart,
 }: {
   role: string; setRole: (v: string) => void;
+  customRole: string; setCustomRole: (v: string) => void;
   level: string; setLevel: (v: string) => void;
   onStart: () => void;
 }) {
+  const [ph] = useState(() => CUSTOM_PLACEHOLDERS[Math.floor(Math.random() * CUSTOM_PLACEHOLDERS.length)]);
+  const canStart = role !== "custom" || customRole.trim().length > 0;
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
