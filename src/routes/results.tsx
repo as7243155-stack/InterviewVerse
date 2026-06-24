@@ -102,7 +102,7 @@ function ResultsPage() {
             </div>
             <div>
               <div className="inline-flex items-center gap-2 rounded-full bg-success/15 px-3 py-1 text-xs font-medium text-success">
-                <TrendingUp className="h-3 w-3" /> Top 15% of senior candidates
+                <TrendingUp className="h-3 w-3" /> Strong overall result
               </div>
               <h2 className="mt-3 text-2xl font-semibold tracking-tight">Strong performance with room to sharpen edge cases.</h2>
               <p className="mt-2 text-sm text-muted-foreground max-w-xl">
@@ -111,7 +111,7 @@ function ResultsPage() {
               </p>
               <div className="mt-5 grid grid-cols-3 gap-3 max-w-md">
                 {[
-                  { k: "Rank", v: "Top 15%" },
+                  { k: "Questions", v: "5" },
                   { k: "Duration", v: "24m" },
                   { k: "Level", v: "Senior" },
                 ].map((s) => (
