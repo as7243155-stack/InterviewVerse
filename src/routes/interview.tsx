@@ -133,6 +133,22 @@ function SetupView({
               );
             })}
           </div>
+
+          {role === "custom" && (
+            <div className="mt-4">
+              <label className="text-xs font-medium text-muted-foreground">Enter your role</label>
+              <input
+                value={customRole}
+                onChange={(e) => setCustomRole(e.target.value)}
+                placeholder={`e.g. ${ph}`}
+                autoFocus
+                className="mt-2 h-11 w-full rounded-xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-brand/40"
+              />
+              <div className="mt-2 text-xs text-muted-foreground">
+                Try: Java Developer, Python Developer, DevOps Engineer, QA Engineer, Data Analyst, SDE Intern.
+              </div>
+            </div>
+          )}
         </section>
 
         <section className="mt-6 rounded-2xl border border-border bg-card p-6 shadow-soft">
