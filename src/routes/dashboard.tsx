@@ -40,14 +40,14 @@ const TRACKS = [
 function Dashboard() {
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader />
+      <SiteHeader variant="app" />
       <main className="mx-auto max-w-7xl px-6 py-10">
         {/* Greeting */}
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-sm text-muted-foreground">Good morning, Alex</p>
+            <p className="text-sm text-muted-foreground">Welcome back</p>
             <h1 className="mt-1 text-3xl font-semibold tracking-tight md:text-4xl">
-              Let's land that offer.
+              Ready for your next interview?
             </h1>
           </div>
           <div className="flex gap-2">
