@@ -186,7 +186,8 @@ function SetupView({
           </div>
           <button
             onClick={onStart}
-            className="inline-flex h-11 items-center gap-2 rounded-full bg-gradient-brand px-5 text-sm font-medium text-white shadow-glow transition-transform hover:scale-[1.02]"
+            disabled={!canStart}
+            className="inline-flex h-11 items-center gap-2 rounded-full bg-gradient-brand px-5 text-sm font-medium text-white shadow-glow transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
           >
             Generate questions <ArrowRight className="h-4 w-4" />
           </button>
