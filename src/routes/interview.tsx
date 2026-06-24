@@ -96,7 +96,7 @@ function SetupView({
   const canStart = role !== "custom" || customRole.trim().length > 0;
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader />
+      <SiteHeader variant="app" />
       <main className="mx-auto max-w-4xl px-6 py-12">
         <Link to="/dashboard" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">
           <ArrowLeft className="h-4 w-4" /> Back to dashboard
@@ -217,7 +217,7 @@ function LoadingView({ onDone }: { onDone: () => void }) {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader />
+      <SiteHeader variant="app" />
       <main className="mx-auto flex max-w-2xl flex-col items-center px-6 py-20">
         <div className="relative">
           <div className="absolute -inset-6 rounded-full bg-gradient-brand opacity-20 blur-2xl" />
@@ -283,7 +283,7 @@ function InterviewView({ role, level, customRole }: { role: string; level: strin
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader />
+      <SiteHeader variant="app" />
       <main className="mx-auto max-w-5xl px-6 py-10">
         <div className="flex items-center justify-between">
           <Link to="/dashboard" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">
