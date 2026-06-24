@@ -96,30 +96,46 @@ function Dashboard() {
                 View all <ChevronRight className="h-3 w-3" />
               </Link>
             </div>
-            <ul className="divide-y divide-border">
-              {RECENT.map((r) => (
-                <li key={r.title}>
-                  <Link to="/results" className="group flex items-center gap-4 px-6 py-4 transition-colors hover:bg-secondary/50">
-                    <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-soft text-brand">
-                      <r.icon className="h-4 w-4" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="truncate text-sm font-medium">{r.title}</div>
-                      <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
-                        <span>{r.type}</span><span>•</span><span>{r.time}</span>
+            {RECENT.length === 0 ? (
+              <div className="px-6 py-12 text-center">
+                <div className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-soft text-brand">
+                  <Plus className="h-5 w-5" />
+                </div>
+                <div className="mt-4 text-sm font-medium">No interviews yet</div>
+                <p className="mt-1 text-xs text-muted-foreground">Start your first mock interview to see it here.</p>
+                <Link
+                  to="/interview"
+                  className="mt-4 inline-flex h-9 items-center gap-1.5 rounded-full bg-gradient-brand px-4 text-xs font-medium text-white shadow-glow"
+                >
+                  Start interview
+                </Link>
+              </div>
+            ) : (
+              <ul className="divide-y divide-border">
+                {RECENT.map((r) => (
+                  <li key={r.title}>
+                    <Link to="/results" className="group flex items-center gap-4 px-6 py-4 transition-colors hover:bg-secondary/50">
+                      <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-soft text-brand">
+                        <r.icon className="h-4 w-4" />
                       </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="text-right">
-                        <div className="text-sm font-semibold text-gradient-brand">{r.score}</div>
-                        <div className="text-[10px] text-muted-foreground">/ 10</div>
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate text-sm font-medium">{r.title}</div>
+                        <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
+                          <span>{r.type}</span><span>•</span><span>{r.time}</span>
+                        </div>
                       </div>
-                      <ChevronRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
-                    </div>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+                      <div className="flex items-center gap-3">
+                        <div className="text-right">
+                          <div className="text-sm font-semibold text-gradient-brand">{r.score}</div>
+                          <div className="text-[10px] text-muted-foreground">/ 10</div>
+                        </div>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
           </section>
 
           {/* Tracks */}
