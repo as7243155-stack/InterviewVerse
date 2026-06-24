@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SiteHeader } from "@/components/site-header";
 import {
   Mic,
@@ -14,6 +14,9 @@ import {
   Layers,
   Code2,
   MessageSquare,
+  Wand2,
+  Check,
+  Loader2,
 } from "lucide-react";
 
 export const Route = createFileRoute("/interview")({
@@ -28,6 +31,16 @@ const ROLES = [
   { id: "sysdesign", label: "System Design", icon: Layers },
   { id: "behavioral", label: "Behavioral", icon: MessageSquare },
   { id: "data", label: "Data / ML Engineer", icon: Code2 },
+  { id: "custom", label: "Custom Role", icon: Wand2 },
+];
+
+const CUSTOM_PLACEHOLDERS = [
+  "Java Developer",
+  "Python Developer",
+  "DevOps Engineer",
+  "QA Engineer",
+  "Data Analyst",
+  "SDE Intern",
 ];
 
 const LEVELS = [
@@ -47,23 +60,40 @@ const QUESTIONS = [
 ];
 
 function InterviewPage() {
-  const [stage, setStage] = useState<"setup" | "interview">("setup");
+  const [stage, setStage] = useState<"setup" | "loading" | "interview">("setup");
   const [role, setRole] = useState("sysdesign");
+  const [customRole, setCustomRole] = useState("");
   const [level, setLevel] = useState("senior");
 
   if (stage === "setup") {
-    return <SetupView role={role} setRole={setRole} level={level} setLevel={setLevel} onStart={() => setStage("interview")} />;
+    return (
+      <SetupView
+        role={role}
+        setRole={setRole}
+        customRole={customRole}
+        setCustomRole={setCustomRole}
+        level={level}
+        setLevel={setLevel}
+        onStart={() => setStage("loading")}
+      />
+    );
   }
-  return <InterviewView role={role} level={level} />;
+  if (stage === "loading") {
+    return <LoadingView onDone={() => setStage("interview")} />;
+  }
+  return <InterviewView role={role} level={level} customRole={customRole} />;
 }
 
 function SetupView({
-  role, setRole, level, setLevel, onStart,
+  role, setRole, customRole, setCustomRole, level, setLevel, onStart,
 }: {
   role: string; setRole: (v: string) => void;
+  customRole: string; setCustomRole: (v: string) => void;
   level: string; setLevel: (v: string) => void;
   onStart: () => void;
 }) {
+  const [ph] = useState(() => CUSTOM_PLACEHOLDERS[Math.floor(Math.random() * CUSTOM_PLACEHOLDERS.length)]);
+  const canStart = role !== "custom" || customRole.trim().length > 0;
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
@@ -103,6 +133,22 @@ function SetupView({
               );
             })}
           </div>
+
+          {role === "custom" && (
+            <div className="mt-4">
+              <label className="text-xs font-medium text-muted-foreground">Enter your role</label>
+              <input
+                value={customRole}
+                onChange={(e) => setCustomRole(e.target.value)}
+                placeholder={`e.g. ${ph}`}
+                autoFocus
+                className="mt-2 h-11 w-full rounded-xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-brand/40"
+              />
+              <div className="mt-2 text-xs text-muted-foreground">
+                Try: Java Developer, Python Developer, DevOps Engineer, QA Engineer, Data Analyst, SDE Intern.
+              </div>
+            </div>
+          )}
         </section>
 
         <section className="mt-6 rounded-2xl border border-border bg-card p-6 shadow-soft">
@@ -140,7 +186,8 @@ function SetupView({
           </div>
           <button
             onClick={onStart}
-            className="inline-flex h-11 items-center gap-2 rounded-full bg-gradient-brand px-5 text-sm font-medium text-white shadow-glow transition-transform hover:scale-[1.02]"
+            disabled={!canStart}
+            className="inline-flex h-11 items-center gap-2 rounded-full bg-gradient-brand px-5 text-sm font-medium text-white shadow-glow transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
           >
             Generate questions <ArrowRight className="h-4 w-4" />
           </button>
@@ -150,12 +197,88 @@ function SetupView({
   );
 }
 
-function InterviewView({ role, level }: { role: string; level: string }) {
+const LOADING_STEPS = [
+  "Analyzing role",
+  "Generating interview questions",
+  "Preparing session",
+];
+
+function LoadingView({ onDone }: { onDone: () => void }) {
+  const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    if (step >= LOADING_STEPS.length) {
+      const t = setTimeout(onDone, 400);
+      return () => clearTimeout(t);
+    }
+    const t = setTimeout(() => setStep((s) => s + 1), 900);
+    return () => clearTimeout(t);
+  }, [step, onDone]);
+
+  return (
+    <div className="min-h-screen bg-background">
+      <SiteHeader />
+      <main className="mx-auto flex max-w-2xl flex-col items-center px-6 py-20">
+        <div className="relative">
+          <div className="absolute -inset-6 rounded-full bg-gradient-brand opacity-20 blur-2xl" />
+          <div className="relative inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-brand text-white shadow-glow">
+            <Sparkles className="h-7 w-7" />
+          </div>
+        </div>
+        <h1 className="mt-6 text-2xl font-semibold tracking-tight md:text-3xl">Crafting your interview</h1>
+        <p className="mt-2 text-sm text-muted-foreground">PrepVerse AI is tailoring questions just for you.</p>
+
+        <div className="mt-10 w-full rounded-2xl border border-border bg-card p-6 shadow-soft">
+          <ul className="space-y-4">
+            {LOADING_STEPS.map((label, idx) => {
+              const done = idx < step;
+              const active = idx === step;
+              return (
+                <li key={label} className="flex items-center gap-3">
+                  <span
+                    className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-all ${
+                      done
+                        ? "bg-gradient-brand text-white shadow-glow"
+                        : active
+                        ? "bg-accent text-brand"
+                        : "bg-secondary text-muted-foreground"
+                    }`}
+                  >
+                    {done ? (
+                      <Check className="h-3.5 w-3.5" />
+                    ) : active ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                    )}
+                  </span>
+                  <span
+                    className={`text-sm transition-colors ${
+                      done ? "text-foreground" : active ? "text-foreground" : "text-muted-foreground"
+                    }`}
+                  >
+                    {label}
+                    {active && <span className="ml-1 text-muted-foreground">…</span>}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function InterviewView({ role, level, customRole }: { role: string; level: string; customRole: string }) {
   const [i, setI] = useState(0);
   const [answer, setAnswer] = useState("");
   const [recording, setRecording] = useState(false);
   const progress = ((i + 1) / QUESTIONS.length) * 100;
-  const roleLabel = ROLES.find((r) => r.id === role)?.label ?? "Interview";
+  const roleLabel =
+    role === "custom"
+      ? customRole.trim() || "Custom Role"
+      : ROLES.find((r) => r.id === role)?.label ?? "Interview";
   const levelLabel = LEVELS.find((l) => l.id === level)?.label ?? "";
 
   return (
