@@ -84,7 +84,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "AI-powered mock interviews with structured feedback and clear scoring." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:site", content: "@InterviewVerse" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
