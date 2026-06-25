@@ -32,7 +32,7 @@ function LoginPage() {
           <Logo />
           <div>
             <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs font-medium text-foreground/80 shadow-soft">
-              <Sparkles className="h-3.5 w-3.5 text-brand" /> Built for ambitious engineers
+              <Sparkles className="h-3.5 w-3.5 text-brand" /> Practice. Improve. Get Hired.
             </div>
             <h2 className="mt-5 text-4xl font-semibold leading-tight tracking-tight">
               Practice like it's the<br />
