@@ -41,7 +41,7 @@ function Landing() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
             </span>
-            Now with real-time voice interviews
+            Practice. Improve. Get Hired.
             <ArrowRight className="h-3 w-3" />
           </div>
 
@@ -51,21 +51,21 @@ function Landing() {
           </h1>
 
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-            PrepVerse runs realistic mock interviews with an AI coach, scores every answer,
-            and builds a personalized study plan so you walk in confident on day one.
+            InterviewVerse runs realistic AI mock interviews, scores every answer,
+            and shows you exactly where to improve — so you walk in confident on day one.
           </p>
 
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <Link
               to="/dashboard"
-              className="group inline-flex h-12 items-center gap-2 rounded-full bg-gradient-brand px-6 text-sm font-medium text-white shadow-glow transition-transform hover:scale-[1.02]"
+              className="group inline-flex h-12 items-center gap-2 rounded-full bg-gradient-brand px-6 text-sm font-medium text-white shadow-glow transition-all duration-300 hover:scale-[1.02] hover:shadow-elevated"
             >
-              Start a free interview
+              Start your AI interview
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
             <Link
               to="/dashboard"
-              className="inline-flex h-12 items-center gap-2 rounded-full border border-border bg-card px-6 text-sm font-medium text-foreground shadow-soft transition-colors hover:bg-secondary"
+              className="inline-flex h-12 items-center gap-2 rounded-full border border-border bg-card px-6 text-sm font-medium text-foreground shadow-soft transition-all duration-300 hover:bg-secondary hover:-translate-y-0.5"
             >
               <Sparkles className="h-4 w-4 text-brand" />
               See a sample report
