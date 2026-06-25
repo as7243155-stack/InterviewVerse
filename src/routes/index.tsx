@@ -46,13 +46,13 @@ function Landing() {
           </div>
 
           <h1 className="mx-auto mt-6 max-w-4xl text-5xl font-semibold tracking-tight md:text-7xl">
-            Interview prep that <br className="hidden md:block" />
-            feels like the <span className="text-gradient-brand">real thing.</span>
+            Master every interview with <span className="text-gradient-brand">AI.</span>
           </h1>
 
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-            InterviewVerse runs realistic AI mock interviews, scores every answer,
-            and shows you exactly where to improve — so you walk in confident on day one.
+            InterviewVerse generates AI interview questions tailored to your role, scores
+            your answers with personalized feedback, and tracks every session so you can
+            see your progress over time.
           </p>
 
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
@@ -60,7 +60,7 @@ function Landing() {
               to="/dashboard"
               className="group inline-flex h-12 items-center gap-2 rounded-full bg-gradient-brand px-6 text-sm font-medium text-white shadow-glow transition-all duration-300 hover:scale-[1.02] hover:shadow-elevated"
             >
-              Start your AI interview
+              Start Your AI Interview
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
             <Link
@@ -68,7 +68,7 @@ function Landing() {
               className="inline-flex h-12 items-center gap-2 rounded-full border border-border bg-card px-6 text-sm font-medium text-foreground shadow-soft transition-all duration-300 hover:bg-secondary hover:-translate-y-0.5"
             >
               <Sparkles className="h-4 w-4 text-brand" />
-              See a sample report
+              View Sample Report
             </Link>
           </div>
 
@@ -129,7 +129,7 @@ function Landing() {
       <section className="border-y border-border/60 bg-card/50">
         <div className="mx-auto max-w-7xl px-6 py-12">
           <p className="text-center text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Practice for interview loops at companies like
+            Practice questions inspired by interviews at
           </p>
           <div className="mt-8 grid grid-cols-2 items-center gap-x-8 gap-y-6 md:grid-cols-4 lg:grid-cols-8">
             {COMPANIES.map((c) => (
@@ -145,13 +145,13 @@ function Landing() {
       <section id="features" className="mx-auto max-w-7xl px-6 py-24">
         <div className="mx-auto max-w-2xl text-center">
           <div className="inline-flex items-center gap-2 rounded-full bg-accent px-3 py-1 text-xs font-medium text-accent-foreground">
-            <Zap className="h-3 w-3" /> Built for serious prep
+            <Zap className="h-3 w-3" /> Built for focused practice
           </div>
           <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">
-            Everything you need to <span className="text-gradient-brand">close the loop</span>.
+            Everything you need to <span className="text-gradient-brand">practice smarter.</span>
           </h2>
           <p className="mt-4 text-muted-foreground">
-            From the first practice round to your offer call — InterviewVerse adapts to how you learn.
+            Generate sessions, review feedback, and track where you're improving — all in one place.
           </p>
         </div>
 
@@ -186,7 +186,7 @@ function Landing() {
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link to="/dashboard" className="inline-flex h-12 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-foreground shadow-elevated transition-all duration-300 hover:scale-[1.02]">
-                Start your AI interview <ArrowRight className="h-4 w-4" />
+                Start Your AI Interview <ArrowRight className="h-4 w-4" />
               </Link>
               <div className="flex items-center gap-2 text-sm text-white/85">
                 <CheckCircle2 className="h-4 w-4" /> No setup required
