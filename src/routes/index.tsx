@@ -15,10 +15,10 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "PrepVerse — AI Interview Coach for Top Tech Roles" },
-      { name: "description", content: "Practice technical, behavioral, and system design interviews with an AI coach that gives real-time feedback, structured scoring, and personalized prep plans." },
-      { property: "og:title", content: "PrepVerse — AI Interview Coach" },
-      { property: "og:description", content: "Land your next role with AI-powered mock interviews and instant feedback." },
+      { title: "InterviewVerse — Practice. Improve. Get Hired." },
+      { name: "description", content: "Practice technical, behavioral, and system design interviews with an AI coach that gives structured feedback and clear scoring." },
+      { property: "og:title", content: "InterviewVerse — AI Interview Practice" },
+      { property: "og:description", content: "Practice. Improve. Get Hired. AI-powered mock interviews with structured feedback." },
     ],
   }),
   component: Landing,
