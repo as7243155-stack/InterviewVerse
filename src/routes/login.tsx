@@ -4,7 +4,7 @@ import { Logo } from "@/components/site-header";
 import { Mail, Lock, ArrowRight, Eye, EyeOff, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Sign in — PrepVerse" }] }),
+  head: () => ({ meta: [{ title: "Sign in — InterviewVerse" }] }),
   component: LoginPage,
 });
 
