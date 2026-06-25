@@ -107,7 +107,7 @@ function Dashboard() {
                   to="/interview"
                   className="mt-4 inline-flex h-9 items-center gap-1.5 rounded-full bg-gradient-brand px-4 text-xs font-medium text-white shadow-glow"
                 >
-                  Start interview
+                  Start Interview
                 </Link>
               </div>
             ) : (
