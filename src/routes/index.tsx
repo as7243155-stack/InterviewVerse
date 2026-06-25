@@ -157,12 +157,12 @@ function Landing() {
 
         <div className="mt-16 grid gap-6 md:grid-cols-3">
           {[
-            { icon: Brain, title: "Adaptive question engine", desc: "Questions adjust to your role, level, and weak spots after every session." },
-            { icon: Mic, title: "Realistic voice interviews", desc: "Speak your answers naturally. We transcribe, evaluate, and follow up." },
-            { icon: LineChart, title: "Detailed scoring rubric", desc: "Structure, depth, clarity, and communication — scored line by line." },
-            { icon: Target, title: "Personalized study plan", desc: "A weekly plan generated from your gaps, with curated resources." },
-            { icon: ShieldCheck, title: "Honest feedback", desc: "No hand-holding. We tell you exactly what a senior engineer would say." },
-            { icon: Sparkles, title: "Company-specific tracks", desc: "Tracks tuned to Google, Meta, Stripe, and other top hiring loops." },
+            { icon: Brain, title: "Adaptive question engine", desc: "Questions tuned to your role and experience level for every session." },
+            { icon: Target, title: "Role-specific practice", desc: "Pick from common engineering roles or enter any custom job title." },
+            { icon: LineChart, title: "Detailed scoring rubric", desc: "Structure, depth, clarity, and communication — scored per answer." },
+            { icon: Sparkles, title: "Actionable feedback", desc: "Clear strengths, gaps, and suggested next steps after every interview." },
+            { icon: ShieldCheck, title: "Honest evaluation", desc: "No hand-holding. We tell you exactly what a senior interviewer would say." },
+            { icon: Zap, title: "Built for speed", desc: "Spin up a focused mock interview in under a minute. Practice anywhere." },
           ].map((f) => (
             <div key={f.title} className="group relative rounded-2xl border border-border bg-card p-6 shadow-soft hover-lift">
               <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-brand text-white shadow-glow">
