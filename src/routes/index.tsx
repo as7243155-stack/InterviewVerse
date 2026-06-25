@@ -145,13 +145,13 @@ function Landing() {
       <section id="features" className="mx-auto max-w-7xl px-6 py-24">
         <div className="mx-auto max-w-2xl text-center">
           <div className="inline-flex items-center gap-2 rounded-full bg-accent px-3 py-1 text-xs font-medium text-accent-foreground">
-            <Zap className="h-3 w-3" /> Built for serious prep
+            <Zap className="h-3 w-3" /> Built for focused practice
           </div>
           <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">
-            Everything you need to <span className="text-gradient-brand">close the loop</span>.
+            Everything you need to <span className="text-gradient-brand">practice smarter.</span>
           </h2>
           <p className="mt-4 text-muted-foreground">
-            From the first practice round to your offer call — InterviewVerse adapts to how you learn.
+            Generate sessions, review feedback, and track where you're improving — all in one place.
           </p>
         </div>
 
