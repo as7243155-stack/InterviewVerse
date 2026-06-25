@@ -90,12 +90,6 @@ export function SiteHeader({ variant = "marketing" }: { variant?: Variant } = {}
             <Link to="/dashboard" className="transition-colors hover:text-foreground" activeProps={{ className: "text-foreground" }}>Dashboard</Link>
             <Link to="/interview" className="transition-colors hover:text-foreground" activeProps={{ className: "text-foreground" }}>Interview</Link>
             <Link to="/history" className="transition-colors hover:text-foreground" activeProps={{ className: "text-foreground" }}>History</Link>
-            {!isApp && (
-              <>
-                <a href="/#features" className="transition-colors hover:text-foreground">Features</a>
-                <a href="/#how" className="transition-colors hover:text-foreground">How it works</a>
-              </>
-            )}
           </nav>
           <div className="flex items-center gap-2">
             {isApp ? (
