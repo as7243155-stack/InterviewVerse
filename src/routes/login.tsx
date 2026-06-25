@@ -39,16 +39,16 @@ function LoginPage() {
               <span className="text-gradient-brand">real interview.</span>
             </h2>
             <p className="mt-4 max-w-md text-sm text-muted-foreground">
-              Realistic AI-driven mocks, deep rubric scoring, and feedback that
-              actually moves the needle. Join thousands prepping with PrepVerse.
+              Realistic AI mock interviews and rubric-based feedback that actually
+              moves the needle. Practice. Improve. Get Hired.
             </p>
             <div className="mt-8 grid max-w-md gap-3">
               {[
                 "Adaptive questions tailored to your role",
-                "Voice-first answers with live transcription",
-                "Detailed rubric and skill radar after each session",
+                "Clear rubric scoring on every answer",
+                "Strengths, gaps, and next steps after each session",
               ].map((t) => (
-                <div key={t} className="flex items-center gap-3 rounded-xl border border-border bg-card/70 p-3 text-sm shadow-soft backdrop-blur">
+                <div key={t} className="flex items-center gap-3 rounded-xl border border-border bg-card/70 p-3 text-sm shadow-soft backdrop-blur transition-colors hover:bg-card">
                   <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-gradient-brand text-white">
                     <Sparkles className="h-3 w-3" />
                   </span>
@@ -57,7 +57,7 @@ function LoginPage() {
               ))}
             </div>
           </div>
-          <p className="text-xs text-muted-foreground">© 2026 PrepVerse Inc.</p>
+          <p className="text-xs text-muted-foreground">© 2026 InterviewVerse Inc.</p>
         </div>
 
         {/* Right — form */}
