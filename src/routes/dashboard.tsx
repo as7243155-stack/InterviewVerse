@@ -55,13 +55,13 @@ function Dashboard() {
               to="/history"
               className="inline-flex h-11 items-center gap-2 rounded-full border border-border bg-card px-4 text-sm font-medium text-foreground shadow-soft transition-colors hover:bg-secondary"
             >
-              View history
+              View History
             </Link>
             <Link
               to="/interview"
               className="group inline-flex h-11 items-center gap-2 rounded-full bg-gradient-brand px-5 text-sm font-medium text-white shadow-glow transition-transform hover:scale-[1.02]"
             >
-              <Plus className="h-4 w-4" /> Start interview
+              <Plus className="h-4 w-4" /> Start Interview
             </Link>
           </div>
         </div>
