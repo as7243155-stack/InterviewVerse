@@ -176,20 +176,20 @@ function Landing() {
       </section>
 
       {/* CTA */}
-      <section id="pricing" className="mx-auto max-w-7xl px-6 pb-24">
+      <section id="get-started" className="mx-auto max-w-7xl px-6 pb-24">
         <div className="relative overflow-hidden rounded-3xl border border-border bg-gradient-brand p-12 text-center text-white shadow-elevated">
           <div className="absolute inset-0 bg-mesh opacity-30" />
           <div className="relative">
             <h2 className="text-4xl font-semibold tracking-tight md:text-5xl">Ready when you are.</h2>
             <p className="mx-auto mt-3 max-w-xl text-white/85">
-              Start with 3 free interviews. No credit card. Upgrade only when you're hooked.
+              Practice. Improve. Get Hired. Start your first AI interview in under a minute.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Link to="/dashboard" className="inline-flex h-12 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-foreground shadow-elevated transition-transform hover:scale-[1.02]">
-                Start free <ArrowRight className="h-4 w-4" />
+              <Link to="/dashboard" className="inline-flex h-12 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-foreground shadow-elevated transition-all duration-300 hover:scale-[1.02]">
+                Start your AI interview <ArrowRight className="h-4 w-4" />
               </Link>
               <div className="flex items-center gap-2 text-sm text-white/85">
-                <CheckCircle2 className="h-4 w-4" /> No card required
+                <CheckCircle2 className="h-4 w-4" /> No setup required
               </div>
             </div>
           </div>
