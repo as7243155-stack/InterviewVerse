@@ -93,7 +93,7 @@ export function SiteHeader({ variant = "marketing" }: { variant?: Variant } = {}
             {!isApp && (
               <>
                 <a href="/#features" className="transition-colors hover:text-foreground">Features</a>
-                <a href="/#pricing" className="transition-colors hover:text-foreground">Pricing</a>
+                <a href="/#how" className="transition-colors hover:text-foreground">How it works</a>
               </>
             )}
           </nav>
