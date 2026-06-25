@@ -186,7 +186,7 @@ function Landing() {
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link to="/dashboard" className="inline-flex h-12 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-foreground shadow-elevated transition-all duration-300 hover:scale-[1.02]">
-                Start your AI interview <ArrowRight className="h-4 w-4" />
+                Start Your AI Interview <ArrowRight className="h-4 w-4" />
               </Link>
               <div className="flex items-center gap-2 text-sm text-white/85">
                 <CheckCircle2 className="h-4 w-4" /> No setup required
