@@ -129,7 +129,7 @@ function Landing() {
       <section className="border-y border-border/60 bg-card/50">
         <div className="mx-auto max-w-7xl px-6 py-12">
           <p className="text-center text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Practice for interview loops at companies like
+            Practice questions inspired by interviews at
           </p>
           <div className="mt-8 grid grid-cols-2 items-center gap-x-8 gap-y-6 md:grid-cols-4 lg:grid-cols-8">
             {COMPANIES.map((c) => (
