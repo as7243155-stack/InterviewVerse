@@ -48,7 +48,7 @@ function UserMenu() {
         >
           <div className="px-3 py-2.5">
             <div className="text-sm font-medium">Alex Johnson</div>
-            <div className="truncate text-xs text-muted-foreground">alex@prepverse.app</div>
+            <div className="truncate text-xs text-muted-foreground">alex@interviewverse.app</div>
           </div>
           <div className="my-1 h-px bg-border" />
           {[
