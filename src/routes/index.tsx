@@ -46,13 +46,13 @@ function Landing() {
           </div>
 
           <h1 className="mx-auto mt-6 max-w-4xl text-5xl font-semibold tracking-tight md:text-7xl">
-            Interview prep that <br className="hidden md:block" />
-            feels like the <span className="text-gradient-brand">real thing.</span>
+            Master every interview with <span className="text-gradient-brand">AI.</span>
           </h1>
 
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-            InterviewVerse runs realistic AI mock interviews, scores every answer,
-            and shows you exactly where to improve — so you walk in confident on day one.
+            InterviewVerse generates AI interview questions tailored to your role, scores
+            your answers with personalized feedback, and tracks every session so you can
+            see your progress over time.
           </p>
 
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
