@@ -80,7 +80,7 @@ function Landing() {
                 <span className="h-2.5 w-2.5 rounded-full bg-destructive/70" />
                 <span className="h-2.5 w-2.5 rounded-full bg-warning/70" />
                 <span className="h-2.5 w-2.5 rounded-full bg-success/70" />
-                <span className="ml-3 text-xs text-muted-foreground">prepverse.app / interview / system-design</span>
+                <span className="ml-3 text-xs text-muted-foreground">interviewverse.app / interview / system-design</span>
               </div>
               <div className="grid gap-6 p-8 md:grid-cols-[1fr_280px]">
                 <div className="text-left">
