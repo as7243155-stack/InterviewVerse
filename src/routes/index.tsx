@@ -60,7 +60,7 @@ function Landing() {
               to="/dashboard"
               className="group inline-flex h-12 items-center gap-2 rounded-full bg-gradient-brand px-6 text-sm font-medium text-white shadow-glow transition-all duration-300 hover:scale-[1.02] hover:shadow-elevated"
             >
-              Start your AI interview
+              Start Your AI Interview
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
             <Link
@@ -68,7 +68,7 @@ function Landing() {
               className="inline-flex h-12 items-center gap-2 rounded-full border border-border bg-card px-6 text-sm font-medium text-foreground shadow-soft transition-all duration-300 hover:bg-secondary hover:-translate-y-0.5"
             >
               <Sparkles className="h-4 w-4 text-brand" />
-              See a sample report
+              View Sample Report
             </Link>
           </div>
 
