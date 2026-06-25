@@ -4,7 +4,7 @@ import { SiteHeader } from "@/components/site-header";
 import { Search, Calendar, ChevronRight, Code2, MessageSquare, Layers, Filter } from "lucide-react";
 
 export const Route = createFileRoute("/history")({
-  head: () => ({ meta: [{ title: "History — PrepVerse" }] }),
+  head: () => ({ meta: [{ title: "History — InterviewVerse" }] }),
   component: HistoryPage,
 });
 

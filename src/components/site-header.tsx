@@ -8,7 +8,7 @@ export function Logo({ className = "" }: { className?: string }) {
       <span className="relative inline-flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-brand shadow-glow">
         <Sparkles className="h-4 w-4 text-white" strokeWidth={2.5} />
       </span>
-      <span className="text-[17px] font-semibold tracking-tight">PrepVerse</span>
+      <span className="text-[17px] font-semibold tracking-tight">InterviewVerse</span>
     </Link>
   );
 }
@@ -48,7 +48,7 @@ function UserMenu() {
         >
           <div className="px-3 py-2.5">
             <div className="text-sm font-medium">Alex Johnson</div>
-            <div className="truncate text-xs text-muted-foreground">alex@prepverse.app</div>
+            <div className="truncate text-xs text-muted-foreground">alex@interviewverse.app</div>
           </div>
           <div className="my-1 h-px bg-border" />
           {[
@@ -93,7 +93,7 @@ export function SiteHeader({ variant = "marketing" }: { variant?: Variant } = {}
             {!isApp && (
               <>
                 <a href="/#features" className="transition-colors hover:text-foreground">Features</a>
-                <a href="/#pricing" className="transition-colors hover:text-foreground">Pricing</a>
+                <a href="/#how" className="transition-colors hover:text-foreground">How it works</a>
               </>
             )}
           </nav>

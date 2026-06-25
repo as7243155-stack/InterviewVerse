@@ -15,10 +15,10 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "PrepVerse — AI Interview Coach for Top Tech Roles" },
-      { name: "description", content: "Practice technical, behavioral, and system design interviews with an AI coach that gives real-time feedback, structured scoring, and personalized prep plans." },
-      { property: "og:title", content: "PrepVerse — AI Interview Coach" },
-      { property: "og:description", content: "Land your next role with AI-powered mock interviews and instant feedback." },
+      { title: "InterviewVerse — Practice. Improve. Get Hired." },
+      { name: "description", content: "Practice technical, behavioral, and system design interviews with an AI coach that gives structured feedback and clear scoring." },
+      { property: "og:title", content: "InterviewVerse — AI Interview Practice" },
+      { property: "og:description", content: "Practice. Improve. Get Hired. AI-powered mock interviews with structured feedback." },
     ],
   }),
   component: Landing,
@@ -41,7 +41,7 @@ function Landing() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
             </span>
-            Now with real-time voice interviews
+            Practice. Improve. Get Hired.
             <ArrowRight className="h-3 w-3" />
           </div>
 
@@ -51,21 +51,21 @@ function Landing() {
           </h1>
 
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-            PrepVerse runs realistic mock interviews with an AI coach, scores every answer,
-            and builds a personalized study plan so you walk in confident on day one.
+            InterviewVerse runs realistic AI mock interviews, scores every answer,
+            and shows you exactly where to improve — so you walk in confident on day one.
           </p>
 
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <Link
               to="/dashboard"
-              className="group inline-flex h-12 items-center gap-2 rounded-full bg-gradient-brand px-6 text-sm font-medium text-white shadow-glow transition-transform hover:scale-[1.02]"
+              className="group inline-flex h-12 items-center gap-2 rounded-full bg-gradient-brand px-6 text-sm font-medium text-white shadow-glow transition-all duration-300 hover:scale-[1.02] hover:shadow-elevated"
             >
-              Start a free interview
+              Start your AI interview
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
             <Link
               to="/dashboard"
-              className="inline-flex h-12 items-center gap-2 rounded-full border border-border bg-card px-6 text-sm font-medium text-foreground shadow-soft transition-colors hover:bg-secondary"
+              className="inline-flex h-12 items-center gap-2 rounded-full border border-border bg-card px-6 text-sm font-medium text-foreground shadow-soft transition-all duration-300 hover:bg-secondary hover:-translate-y-0.5"
             >
               <Sparkles className="h-4 w-4 text-brand" />
               See a sample report
@@ -80,7 +80,7 @@ function Landing() {
                 <span className="h-2.5 w-2.5 rounded-full bg-destructive/70" />
                 <span className="h-2.5 w-2.5 rounded-full bg-warning/70" />
                 <span className="h-2.5 w-2.5 rounded-full bg-success/70" />
-                <span className="ml-3 text-xs text-muted-foreground">prepverse.app / interview / system-design</span>
+                <span className="ml-3 text-xs text-muted-foreground">interviewverse.app / interview / system-design</span>
               </div>
               <div className="grid gap-6 p-8 md:grid-cols-[1fr_280px]">
                 <div className="text-left">
@@ -129,7 +129,7 @@ function Landing() {
       <section className="border-y border-border/60 bg-card/50">
         <div className="mx-auto max-w-7xl px-6 py-12">
           <p className="text-center text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Trusted by candidates landing offers at
+            Practice for interview loops at companies like
           </p>
           <div className="mt-8 grid grid-cols-2 items-center gap-x-8 gap-y-6 md:grid-cols-4 lg:grid-cols-8">
             {COMPANIES.map((c) => (
@@ -151,18 +151,18 @@ function Landing() {
             Everything you need to <span className="text-gradient-brand">close the loop</span>.
           </h2>
           <p className="mt-4 text-muted-foreground">
-            From the first practice round to your offer call — PrepVerse adapts to how you learn.
+            From the first practice round to your offer call — InterviewVerse adapts to how you learn.
           </p>
         </div>
 
         <div className="mt-16 grid gap-6 md:grid-cols-3">
           {[
-            { icon: Brain, title: "Adaptive question engine", desc: "Questions adjust to your role, level, and weak spots after every session." },
-            { icon: Mic, title: "Realistic voice interviews", desc: "Speak your answers naturally. We transcribe, evaluate, and follow up." },
-            { icon: LineChart, title: "Detailed scoring rubric", desc: "Structure, depth, clarity, and communication — scored line by line." },
-            { icon: Target, title: "Personalized study plan", desc: "A weekly plan generated from your gaps, with curated resources." },
-            { icon: ShieldCheck, title: "Honest feedback", desc: "No hand-holding. We tell you exactly what a senior engineer would say." },
-            { icon: Sparkles, title: "Company-specific tracks", desc: "Tracks tuned to Google, Meta, Stripe, and other top hiring loops." },
+            { icon: Brain, title: "Adaptive question engine", desc: "Questions tuned to your role and experience level for every session." },
+            { icon: Target, title: "Role-specific practice", desc: "Pick from common engineering roles or enter any custom job title." },
+            { icon: LineChart, title: "Detailed scoring rubric", desc: "Structure, depth, clarity, and communication — scored per answer." },
+            { icon: Sparkles, title: "Actionable feedback", desc: "Clear strengths, gaps, and suggested next steps after every interview." },
+            { icon: ShieldCheck, title: "Honest evaluation", desc: "No hand-holding. We tell you exactly what a senior interviewer would say." },
+            { icon: Zap, title: "Built for speed", desc: "Spin up a focused mock interview in under a minute. Practice anywhere." },
           ].map((f) => (
             <div key={f.title} className="group relative rounded-2xl border border-border bg-card p-6 shadow-soft hover-lift">
               <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-brand text-white shadow-glow">
@@ -176,20 +176,20 @@ function Landing() {
       </section>
 
       {/* CTA */}
-      <section id="pricing" className="mx-auto max-w-7xl px-6 pb-24">
+      <section id="get-started" className="mx-auto max-w-7xl px-6 pb-24">
         <div className="relative overflow-hidden rounded-3xl border border-border bg-gradient-brand p-12 text-center text-white shadow-elevated">
           <div className="absolute inset-0 bg-mesh opacity-30" />
           <div className="relative">
             <h2 className="text-4xl font-semibold tracking-tight md:text-5xl">Ready when you are.</h2>
             <p className="mx-auto mt-3 max-w-xl text-white/85">
-              Start with 3 free interviews. No credit card. Upgrade only when you're hooked.
+              Practice. Improve. Get Hired. Start your first AI interview in under a minute.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Link to="/dashboard" className="inline-flex h-12 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-foreground shadow-elevated transition-transform hover:scale-[1.02]">
-                Start free <ArrowRight className="h-4 w-4" />
+              <Link to="/dashboard" className="inline-flex h-12 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-foreground shadow-elevated transition-all duration-300 hover:scale-[1.02]">
+                Start your AI interview <ArrowRight className="h-4 w-4" />
               </Link>
               <div className="flex items-center gap-2 text-sm text-white/85">
-                <CheckCircle2 className="h-4 w-4" /> No card required
+                <CheckCircle2 className="h-4 w-4" /> No setup required
               </div>
             </div>
           </div>
@@ -202,7 +202,7 @@ function Landing() {
             <span className="inline-flex h-5 w-5 items-center justify-center rounded-md bg-gradient-brand">
               <Sparkles className="h-3 w-3 text-white" />
             </span>
-            © 2026 PrepVerse. All rights reserved.
+            © 2026 InterviewVerse. All rights reserved.
           </div>
           <div className="flex gap-6">
             <a className="hover:text-foreground" href="#">Privacy</a>

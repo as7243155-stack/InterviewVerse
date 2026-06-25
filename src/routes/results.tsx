@@ -19,7 +19,7 @@ import {
 } from "recharts";
 
 export const Route = createFileRoute("/results")({
-  head: () => ({ meta: [{ title: "Results — PrepVerse" }] }),
+  head: () => ({ meta: [{ title: "Results — InterviewVerse" }] }),
   component: ResultsPage,
 });
 
