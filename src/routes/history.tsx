@@ -43,7 +43,7 @@ function HistoryPage() {
             to="/interview"
             className="inline-flex h-10 items-center gap-2 rounded-full bg-gradient-brand px-4 text-sm font-medium text-white shadow-glow transition-transform hover:scale-[1.02]"
           >
-            Start new interview
+            Start Interview
           </Link>
         </div>
 
