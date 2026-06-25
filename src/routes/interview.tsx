@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 
 export const Route = createFileRoute("/interview")({
-  head: () => ({ meta: [{ title: "Interview — PrepVerse" }] }),
+  head: () => ({ meta: [{ title: "Interview — InterviewVerse" }] }),
   component: InterviewPage,
 });
 
@@ -226,7 +226,7 @@ function LoadingView({ onDone }: { onDone: () => void }) {
           </div>
         </div>
         <h1 className="mt-6 text-2xl font-semibold tracking-tight md:text-3xl">Crafting your interview</h1>
-        <p className="mt-2 text-sm text-muted-foreground">PrepVerse AI is tailoring questions just for you.</p>
+        <p className="mt-2 text-sm text-muted-foreground">InterviewVerse AI is tailoring questions just for you.</p>
 
         <div className="mt-10 w-full rounded-2xl border border-border bg-card p-6 shadow-soft">
           <ul className="space-y-4">

@@ -133,7 +133,7 @@ function LoginPage() {
             </form>
 
             <p className="mt-6 text-center text-xs text-muted-foreground">
-              New to PrepVerse?{" "}
+              New to InterviewVerse?{" "}
               <Link to="/dashboard" className="font-medium text-brand hover:underline">
                 Create an account
               </Link>
