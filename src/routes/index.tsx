@@ -202,7 +202,7 @@ function Landing() {
             <span className="inline-flex h-5 w-5 items-center justify-center rounded-md bg-gradient-brand">
               <Sparkles className="h-3 w-3 text-white" />
             </span>
-            © 2026 PrepVerse. All rights reserved.
+            © 2026 InterviewVerse. All rights reserved.
           </div>
           <div className="flex gap-6">
             <a className="hover:text-foreground" href="#">Privacy</a>
