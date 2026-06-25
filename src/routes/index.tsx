@@ -151,7 +151,7 @@ function Landing() {
             Everything you need to <span className="text-gradient-brand">close the loop</span>.
           </h2>
           <p className="mt-4 text-muted-foreground">
-            From the first practice round to your offer call — PrepVerse adapts to how you learn.
+            From the first practice round to your offer call — InterviewVerse adapts to how you learn.
           </p>
         </div>
 
