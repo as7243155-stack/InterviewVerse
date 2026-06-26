@@ -116,9 +116,10 @@ function SetupView({
 }: {
   role: string; setRole: (v: string) => void;
   customRole: string; setCustomRole: (v: string) => void;
-  level: string; setLevel: (v: string) => void;
+  level: ExperienceLevel; setLevel: (v: ExperienceLevel) => void;
   onStart: () => void;
 }) {
+
   const [ph] = useState(() => CUSTOM_PLACEHOLDERS[Math.floor(Math.random() * CUSTOM_PLACEHOLDERS.length)]);
   const canStart = role !== "custom" || customRole.trim().length > 0;
   return (
