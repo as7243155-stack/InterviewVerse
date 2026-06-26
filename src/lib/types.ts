@@ -6,10 +6,48 @@
  * the API is wired up.
  */
 
-export type ExperienceLevel = "junior" | "mid" | "senior" | "staff";
-export type InterviewType = "System Design" | "Behavioral" | "Technical";
+export type ExperienceLevel = "Intern" | "Junior" | "Mid-Level" | "Senior" | "Staff";
+export type InterviewType = "Technical" | "HR" | "Behavioral" | "System Design";
 export type InterviewStatus = "in_progress" | "completed" | "abandoned";
 
+/** Question shape returned by the FastAPI `/questions` endpoint. */
+export interface BackendQuestion {
+  id: number;
+  question: string;
+  stage?: string;
+  /** Legacy textual difficulty (e.g. "Easy"). */
+  difficulty?: string;
+  /** Numeric 1–5 difficulty from the v2 schema. */
+  difficulty_level?: number;
+  evaluation_focus?: string;
+  is_programming_problem?: boolean;
+  expected_duration?: number;
+  expected_time_minutes?: number;
+  transition_after?: string;
+}
+
+/** Full interview payload returned by the FastAPI `/questions` endpoint. */
+export interface BackendInterview {
+  role: string;
+  experience_level: string;
+  interview_type?: string;
+  question_count: number;
+  estimated_duration?: number;
+  estimated_duration_minutes?: number;
+  introduction: string;
+  questions: BackendQuestion[];
+  stage_transitions?: string[];
+  closing: string;
+}
+
+export interface GenerateInterviewParams {
+  role: string;
+  experience_level: ExperienceLevel;
+  question_count: 5 | 10 | 15;
+  interview_type?: InterviewType;
+}
+
+/** Legacy in-app representations (kept for other pages, unused by /questions). */
 export interface Question {
   id: string;
   prompt: string;
@@ -37,6 +75,7 @@ export interface Interview {
   questions: Question[];
   answers?: Answer[];
 }
+
 
 export interface SkillScore {
   axis: string;
