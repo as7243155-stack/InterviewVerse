@@ -50,27 +50,33 @@ const CUSTOM_PLACEHOLDERS = [
   "SDE Intern",
 ];
 
-const LEVELS = [
-  { id: "intern", label: "Intern", hint: "0–1 yrs" },
-  { id: "junior", label: "Junior", hint: "1–3 yrs" },
-  { id: "mid", label: "Mid-level", hint: "3–5 yrs" },
-  { id: "senior", label: "Senior", hint: "5–8 yrs" },
-  { id: "staff", label: "Staff+", hint: "8+ yrs" },
+const LEVELS: Array<{ id: ExperienceLevel; label: string; hint: string }> = [
+  { id: "Intern", label: "Intern", hint: "0–1 yrs" },
+  { id: "Junior", label: "Junior", hint: "1–3 yrs" },
+  { id: "Mid-Level", label: "Mid-level", hint: "3–5 yrs" },
+  { id: "Senior", label: "Senior", hint: "5–8 yrs" },
+  { id: "Staff", label: "Staff+", hint: "8+ yrs" },
 ];
 
-const QUESTIONS = [
-  "Design a URL shortener that scales to 100M requests per day. Walk me through your data model, traffic estimation, and how you'd handle hot keys.",
-  "Tell me about a time you disagreed with a teammate's technical decision. How did you handle it and what was the outcome?",
-  "Given a binary tree, write a function that returns the maximum path sum where the path can start and end at any node.",
-  "How would you design a notification system for a social network with 500M users? Focus on delivery guarantees and fanout.",
-  "Walk me through what happens, end to end, when you type a URL into a browser and press enter.",
-];
+const QUESTION_COUNT: 5 | 10 | 15 = 5;
+
+function resolveRole(roleId: string, customRole: string): string {
+  if (roleId === "custom") return customRole.trim() || "Software Engineer";
+  return ROLES.find((r) => r.id === roleId)?.label ?? "Software Engineer";
+}
+
+function resolveInterviewType(roleId: string): InterviewType {
+  if (roleId === "sysdesign") return "System Design";
+  if (roleId === "behavioral") return "Behavioral";
+  return "Technical";
+}
 
 function InterviewPage() {
   const [stage, setStage] = useState<"setup" | "loading" | "interview">("setup");
   const [role, setRole] = useState("sysdesign");
   const [customRole, setCustomRole] = useState("");
-  const [level, setLevel] = useState("senior");
+  const [level, setLevel] = useState<ExperienceLevel>("Senior");
+  const [interview, setInterview] = useState<BackendInterview | null>(null);
 
   if (stage === "setup") {
     return (
@@ -86,10 +92,24 @@ function InterviewPage() {
     );
   }
   if (stage === "loading") {
-    return <LoadingView onDone={() => setStage("interview")} />;
+    return (
+      <LoadingView
+        role={resolveRole(role, customRole)}
+        level={level}
+        interviewType={resolveInterviewType(role)}
+        onDone={(data) => {
+          setInterview(data);
+          setStage("interview");
+        }}
+        onCancel={() => setStage("setup")}
+      />
+    );
   }
-  return <InterviewView role={role} level={level} customRole={customRole} />;
+  return interview ? (
+    <InterviewView interview={interview} />
+  ) : null;
 }
+
 
 function SetupView({
   role, setRole, customRole, setCustomRole, level, setLevel, onStart,
