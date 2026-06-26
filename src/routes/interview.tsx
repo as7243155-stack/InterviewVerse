@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SiteHeader } from "@/components/site-header";
+import { generateInterview } from "@/lib/api/services";
+import type { BackendInterview, ExperienceLevel, InterviewType } from "@/lib/types";
 import {
   Mic,
   Pause,
@@ -17,7 +19,12 @@ import {
   Wand2,
   Check,
   Loader2,
+  AlertCircle,
+  Code,
+  Target,
+  Flag,
 } from "lucide-react";
+
 
 export const Route = createFileRoute("/interview")({
   head: () => ({ meta: [{ title: "Interview — InterviewVerse" }] }),
