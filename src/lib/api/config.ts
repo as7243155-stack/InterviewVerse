@@ -22,6 +22,10 @@ export const API_ENDPOINTS = {
     me: "/auth/me",
   },
   interviews: {
+    /** GET /questions — generate a full interview from the FastAPI backend. */
+    questions: "/questions",
+    /** POST /evaluate — score a completed interview. */
+    evaluate: "/evaluate",
     list: "/interviews",
     create: "/interviews",
     detail: (id: string) => `/interviews/${id}`,
@@ -29,6 +33,7 @@ export const API_ENDPOINTS = {
     submitAnswer: (id: string) => `/interviews/${id}/answers`,
     complete: (id: string) => `/interviews/${id}/complete`,
   },
+
   results: {
     detail: (id: string) => `/results/${id}`,
     evaluate: (id: string) => `/results/${id}/evaluate`,
