@@ -12,8 +12,10 @@ import { apiFetch } from "./client";
 import { API_ENDPOINTS } from "./config";
 import type {
   Answer,
+  BackendInterview,
   DashboardStats,
   EvaluationResult,
+  GenerateInterviewParams,
   HistoryItem,
   Interview,
   Question,
@@ -21,6 +23,29 @@ import type {
   ExperienceLevel,
   InterviewType,
 } from "../types";
+
+/**
+ * Calls the FastAPI `/questions` endpoint and returns the structured
+ * interview payload (introduction, questions, stage transitions, closing).
+ */
+export async function generateInterview(
+  params: GenerateInterviewParams,
+): Promise<BackendInterview> {
+  const res = await apiFetch<{ interview: BackendInterview } | BackendInterview>(
+    API_ENDPOINTS.interviews.questions,
+    {
+      query: {
+        role: params.role,
+        experience_level: params.experience_level,
+        question_count: params.question_count,
+        interview_type: params.interview_type ?? "Technical",
+      },
+    },
+  );
+  // Backend wraps the payload in `{ interview: {...} }`.
+  return "interview" in res && res.interview ? res.interview : (res as BackendInterview);
+}
+
 
 export const authService = {
   login: (email: string, password: string) =>
