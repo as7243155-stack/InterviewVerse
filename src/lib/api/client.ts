@@ -20,13 +20,14 @@ export class ApiError extends Error {
 export interface ApiRequestOptions extends Omit<RequestInit, "body"> {
   body?: unknown;
   token?: string;
+  query?: Record<string, string | number | boolean | undefined | null>;
 }
 
 export async function apiFetch<T>(
   path: string,
   options: ApiRequestOptions = {},
 ): Promise<T> {
-  const { body, token, headers, ...rest } = options;
+  const { body, token, headers, query, ...rest } = options;
 
   const finalHeaders: Record<string, string> = {
     "Content-Type": "application/json",
@@ -35,11 +36,23 @@ export async function apiFetch<T>(
   };
   if (token) finalHeaders.Authorization = `Bearer ${token}`;
 
-  const res = await fetch(`${API_BASE_URL}${path}`, {
+  let url = `${API_BASE_URL}${path}`;
+  if (query) {
+    const qs = new URLSearchParams();
+    for (const [k, v] of Object.entries(query)) {
+      if (v === undefined || v === null) continue;
+      qs.set(k, String(v));
+    }
+    const s = qs.toString();
+    if (s) url += `?${s}`;
+  }
+
+  const res = await fetch(url, {
     ...rest,
     headers: finalHeaders,
     body: body !== undefined ? JSON.stringify(body) : undefined,
   });
+
 
   const isJson = res.headers.get("content-type")?.includes("application/json");
   const payload = isJson ? await res.json().catch(() => null) : await res.text();
