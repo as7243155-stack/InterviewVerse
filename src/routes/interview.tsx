@@ -391,6 +391,28 @@ function difficultyLabel(q: BackendQuestionLike): string {
   return "";
 }
 
+function difficultyTone(q: BackendQuestionLike): string {
+  const lvl = q.difficulty_level;
+  const text = (q.difficulty ?? "").toLowerCase();
+  const score =
+    typeof lvl === "number"
+      ? lvl
+      : text.includes("very hard")
+      ? 5
+      : text.includes("hard")
+      ? 4
+      : text.includes("medium")
+      ? 3
+      : text.includes("very easy")
+      ? 1
+      : text.includes("easy")
+      ? 2
+      : 3;
+  if (score <= 2) return "bg-success/10 text-success ring-success/20";
+  if (score === 3) return "bg-warning/15 text-warning-foreground ring-warning/30";
+  return "bg-destructive/10 text-destructive ring-destructive/20";
+}
+
 type BackendQuestionLike = BackendInterview["questions"][number];
 
 function InterviewView({ interview }: { interview: BackendInterview }) {
