@@ -18,11 +18,11 @@ import {
   MessageSquare,
   Wand2,
   Check,
+  CheckCircle2,
   Loader2,
   AlertCircle,
   Code,
   Target,
-  Flag,
 } from "lucide-react";
 
 
@@ -391,6 +391,28 @@ function difficultyLabel(q: BackendQuestionLike): string {
   return "";
 }
 
+function difficultyTone(q: BackendQuestionLike): string {
+  const lvl = q.difficulty_level;
+  const text = (q.difficulty ?? "").toLowerCase();
+  const score =
+    typeof lvl === "number"
+      ? lvl
+      : text.includes("very hard")
+      ? 5
+      : text.includes("hard")
+      ? 4
+      : text.includes("medium")
+      ? 3
+      : text.includes("very easy")
+      ? 1
+      : text.includes("easy")
+      ? 2
+      : 3;
+  if (score <= 2) return "bg-success/10 text-success ring-success/20";
+  if (score === 3) return "bg-warning/15 text-warning-foreground ring-warning/30";
+  return "bg-destructive/10 text-destructive ring-destructive/20";
+}
+
 type BackendQuestionLike = BackendInterview["questions"][number];
 
 function InterviewView({ interview }: { interview: BackendInterview }) {
@@ -404,11 +426,11 @@ function InterviewView({ interview }: { interview: BackendInterview }) {
   const currentIdx = Math.min(Math.max(i, 0), questions.length - 1);
   const q = questions[currentIdx];
   const estDuration =
-    interview.estimated_duration ?? interview.estimated_duration_minutes ?? 0;
+    interview.estimated_duration_minutes ?? interview.estimated_duration ?? 0;
 
   const stepNumber = showIntro ? 0 : showClosing ? questions.length + 1 : i + 1;
   const totalSteps = questions.length + 2; // intro + questions + closing
-  const progress = (stepNumber / (totalSteps - 1)) * 100;
+  const progress = Math.min(100, Math.max(0, (stepNumber / (totalSteps - 1)) * 100));
 
   const roleLabel = interview.role;
   const levelLabel = interview.experience_level;
@@ -449,17 +471,24 @@ function InterviewView({ interview }: { interview: BackendInterview }) {
             </span>
             <span className="text-muted-foreground">{Math.round(progress)}% complete</span>
           </div>
+          <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-secondary">
+            <div
+              className="h-full rounded-full bg-gradient-brand transition-[width] duration-700 ease-out"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
           <div className="mt-2 flex gap-1.5">
-            {questions.map((_, idx) => (
-              <div key={idx} className="h-1.5 flex-1 overflow-hidden rounded-full bg-secondary">
-                <div
-                  className={`h-full rounded-full transition-all duration-500 ${
-                    !showIntro && (showClosing || idx <= i) ? "bg-gradient-brand" : "bg-transparent"
-                  }`}
-                  style={{ width: !showIntro && (showClosing || idx <= i) ? "100%" : "0%" }}
-                />
-              </div>
-            ))}
+            {questions.map((_, idx) => {
+              const filled = showClosing || (!showIntro && idx <= i);
+              return (
+                <div key={idx} className="h-1 flex-1 overflow-hidden rounded-full bg-secondary">
+                  <div
+                    className={`h-full rounded-full transition-all duration-500 ${filled ? "bg-brand/70" : "bg-transparent"}`}
+                    style={{ width: filled ? "100%" : "0%" }}
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
 
@@ -472,21 +501,24 @@ function InterviewView({ interview }: { interview: BackendInterview }) {
                   <Sparkles className="h-4 w-4" />
                 </div>
                 <div>
-                  <div className="text-xs font-medium uppercase tracking-wider text-brand">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-brand">
                     {roleLabel} • {levelLabel}
-                    {interview.interview_type ? ` • ${interview.interview_type}` : ""}
+                    {interview.interview_type &&
+                    interview.interview_type.trim().toLowerCase() !== roleLabel.trim().toLowerCase()
+                      ? ` • ${interview.interview_type}`
+                      : ""}
                   </div>
-                  <h1 className="mt-1 text-2xl font-semibold tracking-tight md:text-[28px] leading-snug">
+                  <h1 className="mt-2 text-2xl font-semibold tracking-tight md:text-[28px] leading-snug">
                     Welcome to your interview
                   </h1>
-                  <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+                  <p className="mt-4 whitespace-pre-line text-[15px] leading-relaxed text-muted-foreground">
                     {interview.introduction}
                   </p>
                 </div>
               </div>
 
-              <div className="mt-6 flex flex-wrap gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1 text-xs text-foreground">
+              <div className="mt-7 flex flex-wrap gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1 text-xs font-medium text-foreground">
                   <Target className="h-3.5 w-3.5 text-brand" />
                   {questions.length} questions
                 </span>
@@ -500,21 +532,33 @@ function InterviewView({ interview }: { interview: BackendInterview }) {
           </div>
         ) : showClosing ? (
           <div className="relative mt-8">
-            <div className="absolute -inset-2 rounded-3xl bg-gradient-brand opacity-10 blur-2xl" />
-            <div className="relative rounded-2xl border border-border bg-card p-8 shadow-elevated">
-              <div className="flex items-start gap-3">
-                <div className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-brand text-white shadow-glow">
-                  <Flag className="h-4 w-4" />
-                </div>
-                <div>
-                  <div className="text-xs font-medium uppercase tracking-wider text-brand">Interview complete</div>
-                  <h1 className="mt-1 text-2xl font-semibold tracking-tight md:text-[28px] leading-snug">
-                    Thank you for completing the interview
-                  </h1>
-                  <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
-                    {interview.closing}
-                  </p>
-                </div>
+            <div className="absolute -inset-4 rounded-[2rem] bg-gradient-brand opacity-20 blur-3xl" />
+            <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-8 text-center shadow-elevated md:p-12">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-brand text-white shadow-glow">
+                <CheckCircle2 className="h-8 w-8" />
+              </div>
+              <div className="mt-5 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand">
+                Interview complete
+              </div>
+              <h1 className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">
+                Nicely done — your session is complete
+              </h1>
+              <p className="mx-auto mt-4 max-w-xl whitespace-pre-line text-[15px] leading-relaxed text-muted-foreground">
+                {interview.closing}
+              </p>
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+                <Link
+                  to="/results"
+                  className="inline-flex h-11 items-center gap-2 rounded-full bg-gradient-brand px-6 text-sm font-medium text-white shadow-glow transition-transform hover:scale-[1.02]"
+                >
+                  View your evaluation <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  to="/dashboard"
+                  className="inline-flex h-11 items-center gap-2 rounded-full border border-border bg-card px-5 text-sm font-medium text-foreground hover:bg-secondary"
+                >
+                  Back to dashboard
+                </Link>
               </div>
             </div>
           </div>
@@ -529,27 +573,30 @@ function InterviewView({ interview }: { interview: BackendInterview }) {
 
             <div className="relative mt-6">
               <div className="absolute -inset-2 rounded-3xl bg-gradient-brand opacity-10 blur-2xl" />
-              <div className="relative rounded-2xl border border-border bg-card p-8 shadow-elevated">
-                <div className="flex items-start gap-3">
+              <div className="relative rounded-2xl border border-border bg-card p-6 shadow-elevated sm:p-8">
+                <div className="flex items-start gap-3 sm:gap-4">
                   <div className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-brand text-white shadow-glow">
                     <Sparkles className="h-4 w-4" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="text-xs font-medium uppercase tracking-wider text-brand">
+                    <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-brand">
                       {roleLabel} • {levelLabel}
                     </div>
-                    <h1 className="mt-1 text-2xl font-semibold tracking-tight md:text-[28px] leading-snug">
+                    <h1 className="mt-2 break-words text-xl font-semibold tracking-tight leading-snug sm:text-2xl md:text-[26px]">
                       {q.question}
                     </h1>
 
-                    <div className="mt-4 flex flex-wrap gap-2">
+                    <div className="mt-5 flex flex-wrap items-center gap-2">
                       {q.stage && (
                         <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-2.5 py-1 text-xs font-medium text-foreground">
                           <Layers className="h-3 w-3 text-brand" /> {q.stage}
                         </span>
                       )}
                       {difficultyLabel(q) && (
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-2.5 py-1 text-xs font-medium text-foreground">
+                        <span
+                          className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset ${difficultyTone(q)}`}
+                        >
+                          <span className="h-1.5 w-1.5 rounded-full bg-current" />
                           {difficultyLabel(q)}
                         </span>
                       )}
@@ -562,8 +609,8 @@ function InterviewView({ interview }: { interview: BackendInterview }) {
                         <span
                           className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${
                             q.is_programming_problem
-                              ? "bg-brand/10 text-brand"
-                              : "bg-secondary text-muted-foreground"
+                              ? "bg-brand/10 text-brand ring-1 ring-inset ring-brand/20"
+                              : "bg-secondary text-muted-foreground ring-1 ring-inset ring-border"
                           }`}
                         >
                           <Code className="h-3 w-3" />
