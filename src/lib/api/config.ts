@@ -6,8 +6,8 @@
  * Falls back to a local FastAPI dev server on port 8000.
  */
 export const API_BASE_URL =
-  (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
-  "http://localhost:8000";
+  import.meta.env.VITE_API_BASE_URL ||
+  "https://interviewverse-backend.onrender.com";
 
 /**
  * Single source of truth for every backend endpoint used by the app.
