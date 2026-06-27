@@ -404,11 +404,11 @@ function InterviewView({ interview }: { interview: BackendInterview }) {
   const currentIdx = Math.min(Math.max(i, 0), questions.length - 1);
   const q = questions[currentIdx];
   const estDuration =
-    interview.estimated_duration ?? interview.estimated_duration_minutes ?? 0;
+    interview.estimated_duration_minutes ?? interview.estimated_duration ?? 0;
 
   const stepNumber = showIntro ? 0 : showClosing ? questions.length + 1 : i + 1;
   const totalSteps = questions.length + 2; // intro + questions + closing
-  const progress = (stepNumber / (totalSteps - 1)) * 100;
+  const progress = Math.min(100, Math.max(0, (stepNumber / (totalSteps - 1)) * 100));
 
   const roleLabel = interview.role;
   const levelLabel = interview.experience_level;
