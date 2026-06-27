@@ -18,11 +18,11 @@ import {
   MessageSquare,
   Wand2,
   Check,
+  CheckCircle2,
   Loader2,
   AlertCircle,
   Code,
   Target,
-  Flag,
 } from "lucide-react";
 
 
