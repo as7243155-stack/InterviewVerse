@@ -479,21 +479,24 @@ function InterviewView({ interview }: { interview: BackendInterview }) {
                   <Sparkles className="h-4 w-4" />
                 </div>
                 <div>
-                  <div className="text-xs font-medium uppercase tracking-wider text-brand">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-brand">
                     {roleLabel} • {levelLabel}
-                    {interview.interview_type ? ` • ${interview.interview_type}` : ""}
+                    {interview.interview_type &&
+                    interview.interview_type.trim().toLowerCase() !== roleLabel.trim().toLowerCase()
+                      ? ` • ${interview.interview_type}`
+                      : ""}
                   </div>
-                  <h1 className="mt-1 text-2xl font-semibold tracking-tight md:text-[28px] leading-snug">
+                  <h1 className="mt-2 text-2xl font-semibold tracking-tight md:text-[28px] leading-snug">
                     Welcome to your interview
                   </h1>
-                  <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+                  <p className="mt-4 whitespace-pre-line text-[15px] leading-relaxed text-muted-foreground">
                     {interview.introduction}
                   </p>
                 </div>
               </div>
 
-              <div className="mt-6 flex flex-wrap gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1 text-xs text-foreground">
+              <div className="mt-7 flex flex-wrap gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1 text-xs font-medium text-foreground">
                   <Target className="h-3.5 w-3.5 text-brand" />
                   {questions.length} questions
                 </span>
