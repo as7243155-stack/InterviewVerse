@@ -551,27 +551,30 @@ function InterviewView({ interview }: { interview: BackendInterview }) {
 
             <div className="relative mt-6">
               <div className="absolute -inset-2 rounded-3xl bg-gradient-brand opacity-10 blur-2xl" />
-              <div className="relative rounded-2xl border border-border bg-card p-8 shadow-elevated">
-                <div className="flex items-start gap-3">
+              <div className="relative rounded-2xl border border-border bg-card p-6 shadow-elevated sm:p-8">
+                <div className="flex items-start gap-3 sm:gap-4">
                   <div className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-brand text-white shadow-glow">
                     <Sparkles className="h-4 w-4" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="text-xs font-medium uppercase tracking-wider text-brand">
+                    <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-brand">
                       {roleLabel} • {levelLabel}
                     </div>
-                    <h1 className="mt-1 text-2xl font-semibold tracking-tight md:text-[28px] leading-snug">
+                    <h1 className="mt-2 break-words text-xl font-semibold tracking-tight leading-snug sm:text-2xl md:text-[26px]">
                       {q.question}
                     </h1>
 
-                    <div className="mt-4 flex flex-wrap gap-2">
+                    <div className="mt-5 flex flex-wrap items-center gap-2">
                       {q.stage && (
                         <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-2.5 py-1 text-xs font-medium text-foreground">
                           <Layers className="h-3 w-3 text-brand" /> {q.stage}
                         </span>
                       )}
                       {difficultyLabel(q) && (
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-2.5 py-1 text-xs font-medium text-foreground">
+                        <span
+                          className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset ${difficultyTone(q)}`}
+                        >
+                          <span className="h-1.5 w-1.5 rounded-full bg-current" />
                           {difficultyLabel(q)}
                         </span>
                       )}
@@ -584,8 +587,8 @@ function InterviewView({ interview }: { interview: BackendInterview }) {
                         <span
                           className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${
                             q.is_programming_problem
-                              ? "bg-brand/10 text-brand"
-                              : "bg-secondary text-muted-foreground"
+                              ? "bg-brand/10 text-brand ring-1 ring-inset ring-brand/20"
+                              : "bg-secondary text-muted-foreground ring-1 ring-inset ring-border"
                           }`}
                         >
                           <Code className="h-3 w-3" />
@@ -600,6 +603,7 @@ function InterviewView({ interview }: { interview: BackendInterview }) {
                       )}
                     </div>
                   </div>
+                </div>
                 </div>
 
                 <div className="mt-6 flex items-start gap-3 rounded-xl bg-accent/60 p-4 text-sm text-accent-foreground">
