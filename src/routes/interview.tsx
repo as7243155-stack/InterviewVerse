@@ -449,17 +449,24 @@ function InterviewView({ interview }: { interview: BackendInterview }) {
             </span>
             <span className="text-muted-foreground">{Math.round(progress)}% complete</span>
           </div>
+          <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-secondary">
+            <div
+              className="h-full rounded-full bg-gradient-brand transition-[width] duration-700 ease-out"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
           <div className="mt-2 flex gap-1.5">
-            {questions.map((_, idx) => (
-              <div key={idx} className="h-1.5 flex-1 overflow-hidden rounded-full bg-secondary">
-                <div
-                  className={`h-full rounded-full transition-all duration-500 ${
-                    !showIntro && (showClosing || idx <= i) ? "bg-gradient-brand" : "bg-transparent"
-                  }`}
-                  style={{ width: !showIntro && (showClosing || idx <= i) ? "100%" : "0%" }}
-                />
-              </div>
-            ))}
+            {questions.map((_, idx) => {
+              const filled = showClosing || (!showIntro && idx <= i);
+              return (
+                <div key={idx} className="h-1 flex-1 overflow-hidden rounded-full bg-secondary">
+                  <div
+                    className={`h-full rounded-full transition-all duration-500 ${filled ? "bg-brand/70" : "bg-transparent"}`}
+                    style={{ width: filled ? "100%" : "0%" }}
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
 
