@@ -33,86 +33,89 @@ def home():
 @app.get("/questions")
 def generate_questions(
     role: str,
-    level: str = "Fresher"
+    experience_level: str = "Junior",
+    question_count: int = 5,
+    interview_type: str = "Technical",
+    # Back-compat with the old client that sent `level=...`
+    level: str | None = None,
 ):
+    if level and (not experience_level or experience_level == "Junior"):
+        experience_level = level
+
+    if question_count not in (5, 10, 15):
+        question_count = 5
 
     prompt = f"""
-You are an expert interviewer.
+You are an expert technical interviewer designing a structured mock interview.
 
-Create a structured interview for the role:
+Generate a complete interview as STRICT JSON ONLY (no prose, no markdown fences).
 
-Role: {role}
+Inputs:
+- Role: {role}
+- Experience Level: {experience_level}
+- Interview Type: {interview_type}
+- Number of questions: {question_count}
 
-Experience Level: {level}
+Stages to cycle through across the {question_count} questions (in order, looping if needed):
+Fundamentals, Core Knowledge, Practical Application, Scenario-Based Problem Solving, Advanced Thinking / Decision Making.
 
-Generate EXACTLY 5 questions.
+Difficulty must scale with experience level:
+- Intern / Junior: concepts and understanding; avoid system design and heavy coding.
+- Mid-Level: practical experience, troubleshooting, moderate difficulty.
+- Senior / Staff: architecture, trade-offs, leadership, strategic decisions.
 
-Question Structure:
+Return JSON in this EXACT shape:
 
-Question 1:
-Fundamentals
-- Test basic concepts and terminology.
+{{
+  "interview": {{
+    "role": "{role}",
+    "experience_level": "{experience_level}",
+    "interview_type": "{interview_type}",
+    "question_count": {question_count},
+    "estimated_duration_minutes": <integer total minutes>,
+    "introduction": "<2-4 sentence welcome that frames the session>",
+    "questions": [
+      {{
+        "id": 1,
+        "stage": "Fundamentals",
+        "difficulty_level": <integer 1-5>,
+        "evaluation_focus": "<what this question evaluates>",
+        "expected_time_minutes": <integer minutes>,
+        "is_programming_problem": <true|false>,
+        "question": "<the question text>"
+      }}
+    ],
+    "stage_transitions": [
+      "<short sentence bridging question 1 -> 2>",
+      "<short sentence bridging question 2 -> 3>"
+    ],
+    "closing": "<2-3 sentence closing message thanking the candidate>"
+  }}
+}}
 
-Question 2:
-Core Knowledge
-- Test understanding of important concepts used in the role.
-
-Question 3:
-Practical Application
-- Ask how the candidate would apply knowledge in real work.
-
-Question 4:
-Scenario-Based Problem Solving
-- Present a realistic situation and ask how they would respond.
-
-Question 5:
-Advanced Thinking / Decision Making
-- Test reasoning, judgement, optimization, or leadership appropriate to the experience level.
-
-Difficulty Rules:
-
-Fresher:
-- Focus on concepts and understanding.
-- Avoid very advanced topics.
-- Avoid system design.
-- Avoid difficult coding challenges.
-- Do not require writing large code blocks.
-
-Mid-Level:
-- Focus on practical experience.
-- Include troubleshooting and decision making.
-- Moderate difficulty.
-
-Senior:
-- Focus on architecture, leadership, trade-offs, and strategic decisions.
-- Higher difficulty.
-
-Important:
-- Questions must be specific to the role.
-- Questions should evaluate knowledge and reasoning.
-- Avoid asking candidates to write complete programs.
-- Avoid LeetCode-style coding challenges unless the role explicitly requires them.
-- Return ONLY the 5 questions.
-- One question per line.
+Rules:
+- Output ONLY the JSON object above. No commentary, no markdown.
+- Generate EXACTLY {question_count} questions with ids 1..{question_count}.
+- stage_transitions has length {question_count - 1}.
+- Questions must be specific to the role and appropriate to the experience level.
+- Avoid LeetCode-style problems unless the role explicitly requires them.
 """
 
     try:
         response = model.generate_content(prompt)
-
-        questions = [
-            q.strip()
-            for q in response.text.split("\n")
-            if q.strip()
-        ]
-
-        return {"questions": questions}
+        text = response.text.strip()
+        text = text.replace("```json", "").replace("```", "").strip()
+        data = json.loads(text)
+        if "interview" not in data:
+            data = {"interview": data}
+        return data
 
     except Exception as e:
         return {
-            "questions": [
-                f"Error generating questions: {str(e)}"
-            ]
+            "error": f"Failed to generate interview: {str(e)}",
+            "interview": None,
         }
+
 
 
 @app.post("/evaluate")
