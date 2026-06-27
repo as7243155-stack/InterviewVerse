@@ -31,7 +31,8 @@ import type {
 export async function generateInterview(
   params: GenerateInterviewParams,
 ): Promise<BackendInterview> {
-  const res = await apiFetch<{ interview: BackendInterview } | BackendInterview>(
+
+  const res = await apiFetch<any>(
     API_ENDPOINTS.interviews.questions,
     {
       query: {
@@ -42,8 +43,17 @@ export async function generateInterview(
       },
     },
   );
-  // Backend wraps the payload in `{ interview: {...} }`.
-  return "interview" in res && res.interview ? res.interview : (res as BackendInterview);
+
+  console.log("RAW RESPONSE FROM API");
+  console.log(res);
+
+  if (res.interview) {
+    console.log("RETURNING res.interview");
+    return res.interview;
+  }
+
+  console.log("RETURNING res");
+  return res;
 }
 
 

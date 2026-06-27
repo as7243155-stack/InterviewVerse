@@ -48,9 +48,9 @@ def generate_questions(
         text = text.replace("```json", "")
         text = text.replace("```", "")
         text = text.strip()
-
+        print(text)
         result = json.loads(text)
-
+        
         return result
 
     except Exception as e:
@@ -59,7 +59,7 @@ def generate_questions(
         }
 
 
-@app.post("/evaluate")
+@app.post("/evaluate")  
 def evaluate_interview(data: dict):
 
     questions = data.get("questions", [])
