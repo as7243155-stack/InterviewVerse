@@ -510,21 +510,33 @@ function InterviewView({ interview }: { interview: BackendInterview }) {
           </div>
         ) : showClosing ? (
           <div className="relative mt-8">
-            <div className="absolute -inset-2 rounded-3xl bg-gradient-brand opacity-10 blur-2xl" />
-            <div className="relative rounded-2xl border border-border bg-card p-8 shadow-elevated">
-              <div className="flex items-start gap-3">
-                <div className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-brand text-white shadow-glow">
-                  <Flag className="h-4 w-4" />
-                </div>
-                <div>
-                  <div className="text-xs font-medium uppercase tracking-wider text-brand">Interview complete</div>
-                  <h1 className="mt-1 text-2xl font-semibold tracking-tight md:text-[28px] leading-snug">
-                    Thank you for completing the interview
-                  </h1>
-                  <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
-                    {interview.closing}
-                  </p>
-                </div>
+            <div className="absolute -inset-4 rounded-[2rem] bg-gradient-brand opacity-20 blur-3xl" />
+            <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-8 text-center shadow-elevated md:p-12">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-brand text-white shadow-glow">
+                <CheckCircle2 className="h-8 w-8" />
+              </div>
+              <div className="mt-5 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand">
+                Interview complete
+              </div>
+              <h1 className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">
+                Nicely done — your session is complete
+              </h1>
+              <p className="mx-auto mt-4 max-w-xl whitespace-pre-line text-[15px] leading-relaxed text-muted-foreground">
+                {interview.closing}
+              </p>
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+                <Link
+                  to="/results"
+                  className="inline-flex h-11 items-center gap-2 rounded-full bg-gradient-brand px-6 text-sm font-medium text-white shadow-glow transition-transform hover:scale-[1.02]"
+                >
+                  View your evaluation <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  to="/dashboard"
+                  className="inline-flex h-11 items-center gap-2 rounded-full border border-border bg-card px-5 text-sm font-medium text-foreground hover:bg-secondary"
+                >
+                  Back to dashboard
+                </Link>
               </div>
             </div>
           </div>
