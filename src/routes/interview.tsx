@@ -604,7 +604,6 @@ function InterviewView({ interview }: { interview: BackendInterview }) {
                     </div>
                   </div>
                 </div>
-                </div>
 
                 <div className="mt-6 flex items-start gap-3 rounded-xl bg-accent/60 p-4 text-sm text-accent-foreground">
                   <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
