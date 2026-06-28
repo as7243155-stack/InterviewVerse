@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { SiteHeader } from "@/components/site-header";
+import { RequireAuth } from "@/components/require-auth";
 import { generateInterview } from "@/lib/api/services";
 import type { BackendInterview, ExperienceLevel, InterviewType } from "@/lib/types";
 import {
@@ -28,7 +29,11 @@ import {
 
 export const Route = createFileRoute("/interview")({
   head: () => ({ meta: [{ title: "Interview — InterviewVerse" }] }),
-  component: InterviewPage,
+  component: () => (
+    <RequireAuth>
+      <InterviewPage />
+    </RequireAuth>
+  ),
 });
 
 const ROLES = [

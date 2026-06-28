@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site-header";
+import { RequireAuth } from "@/components/require-auth";
+import { useAuth, getDisplayName } from "@/lib/auth-context";
 import {
   ArrowUpRight,
   Plus,
@@ -15,7 +17,11 @@ import {
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — InterviewVerse" }] }),
-  component: Dashboard,
+  component: () => (
+    <RequireAuth>
+      <Dashboard />
+    </RequireAuth>
+  ),
 });
 
 const STATS = [

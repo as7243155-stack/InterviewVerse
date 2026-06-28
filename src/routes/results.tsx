@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site-header";
+import { RequireAuth } from "@/components/require-auth";
 import {
   CheckCircle2,
   AlertTriangle,
@@ -20,7 +21,11 @@ import {
 
 export const Route = createFileRoute("/results")({
   head: () => ({ meta: [{ title: "Results — InterviewVerse" }] }),
-  component: ResultsPage,
+  component: () => (
+    <RequireAuth>
+      <ResultsPage />
+    </RequireAuth>
+  ),
 });
 
 const SCORE = 8.4;
