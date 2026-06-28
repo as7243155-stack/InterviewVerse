@@ -44,6 +44,8 @@ const TRACKS = [
 ];
 
 function Dashboard() {
+  const { user } = useAuth();
+  const firstName = getDisplayName(user).split(" ")[0];
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader variant="app" />
@@ -53,7 +55,7 @@ function Dashboard() {
           <div>
             <p className="text-sm text-muted-foreground">Welcome back</p>
             <h1 className="mt-1 text-3xl font-semibold tracking-tight md:text-4xl">
-              Ready for your next interview?
+              Hi, {firstName} — ready for your next interview?
             </h1>
           </div>
           <div className="flex gap-2">
