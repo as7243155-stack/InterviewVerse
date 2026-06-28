@@ -1,11 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { SiteHeader } from "@/components/site-header";
+import { RequireAuth } from "@/components/require-auth";
 import { Search, Calendar, ChevronRight, Code2, MessageSquare, Layers, Filter } from "lucide-react";
 
 export const Route = createFileRoute("/history")({
   head: () => ({ meta: [{ title: "History — InterviewVerse" }] }),
-  component: HistoryPage,
+  component: () => (
+    <RequireAuth>
+      <HistoryPage />
+    </RequireAuth>
+  ),
 });
 
 type Item = { id: string; title: string; type: "System Design" | "Behavioral" | "Technical"; score: number; date: string; duration: string };

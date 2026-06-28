@@ -1,33 +1,94 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Logo } from "@/components/site-header";
-import { Mail, Lock, ArrowRight, Eye, EyeOff, Sparkles } from "lucide-react";
+import { Mail, Lock, ArrowRight, Eye, EyeOff, Sparkles, Loader2, AlertCircle } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/lib/auth-context";
 
 export const Route = createFileRoute("/login")({
   head: () => ({ meta: [{ title: "Sign in — InterviewVerse" }] }),
   component: LoginPage,
 });
 
+function friendlyError(message: string): string {
+  const m = message.toLowerCase();
+  if (m.includes("invalid login")) return "Invalid email or password.";
+  if (m.includes("email not confirmed")) return "Please verify your email before signing in.";
+  if (m.includes("network")) return "Network issue. Check your connection and try again.";
+  if (m.includes("popup")) return "Google sign-in was cancelled.";
+  return message;
+}
+
 function LoginPage() {
   const navigate = useNavigate();
+  const { user, loading: authLoading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(true);
   const [show, setShow] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const onSubmit = (e: React.FormEvent) => {
+  // Already logged in → bounce to dashboard
+  useEffect(() => {
+    if (!authLoading && user) navigate({ to: "/dashboard", replace: true });
+  }, [authLoading, user, navigate]);
+
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    navigate({ to: "/dashboard" });
+    setError(null);
+    setSubmitting(true);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      navigate({ to: "/dashboard", replace: true });
+    } catch (err) {
+      setError(friendlyError(err instanceof Error ? err.message : "Sign in failed."));
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const onGoogle = async () => {
+    setError(null);
+    setGoogleLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: `${window.location.origin}/dashboard` },
+      });
+      if (error) throw error;
+    } catch (err) {
+      setError(friendlyError(err instanceof Error ? err.message : "Google sign-in failed."));
+      setGoogleLoading(false);
+    }
+  };
+
+  const onForgot = async () => {
+    setError(null);
+    if (!email) {
+      setError("Enter your email above, then click Forgot.");
+      return;
+    }
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/login`,
+      });
+      if (error) throw error;
+      setError("Password reset email sent. Check your inbox.");
+    } catch (err) {
+      setError(friendlyError(err instanceof Error ? err.message : "Could not send reset email."));
+    }
   };
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-background">
-      {/* Ambient mesh */}
       <div className="pointer-events-none absolute inset-0 bg-mesh opacity-60" />
       <div className="pointer-events-none absolute -left-32 top-20 h-[420px] w-[420px] rounded-full bg-gradient-brand opacity-20 blur-3xl" />
       <div className="pointer-events-none absolute -right-32 bottom-0 h-[420px] w-[420px] rounded-full bg-gradient-brand opacity-20 blur-3xl" />
 
       <div className="relative mx-auto grid min-h-screen max-w-7xl px-6 lg:grid-cols-2">
-        {/* Left — brand panel */}
         <div className="hidden flex-col justify-between py-10 pr-10 lg:flex">
           <Logo />
           <div>
@@ -60,7 +121,6 @@ function LoginPage() {
           <p className="text-xs text-muted-foreground">© 2026 InterviewVerse Inc.</p>
         </div>
 
-        {/* Right — form */}
         <div className="flex flex-col justify-center py-10 lg:pl-10">
           <div className="lg:hidden mb-8"><Logo /></div>
 
@@ -70,10 +130,12 @@ function LoginPage() {
 
             <button
               type="button"
-              onClick={() => navigate({ to: "/dashboard" })}
-              className="mt-6 inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border border-border bg-card text-sm font-medium text-foreground shadow-soft transition-colors hover:bg-secondary"
+              onClick={onGoogle}
+              disabled={googleLoading || submitting}
+              className="mt-6 inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border border-border bg-card text-sm font-medium text-foreground shadow-soft transition-colors hover:bg-secondary disabled:opacity-60"
             >
-              <GoogleIcon /> Continue with Google
+              {googleLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleIcon />}
+              Continue with Google
             </button>
 
             <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
@@ -81,6 +143,13 @@ function LoginPage() {
               or sign in with email
               <div className="h-px flex-1 bg-border" />
             </div>
+
+            {error && (
+              <div className="mb-4 flex items-start gap-2 rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-xs text-destructive">
+                <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
 
             <form onSubmit={onSubmit} className="space-y-4">
               <label className="block">
@@ -101,7 +170,7 @@ function LoginPage() {
               <label className="block">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-medium text-muted-foreground">Password</span>
-                  <a href="#" className="text-xs font-medium text-brand hover:underline">Forgot?</a>
+                  <button type="button" onClick={onForgot} className="text-xs font-medium text-brand hover:underline">Forgot?</button>
                 </div>
                 <div className="mt-1.5 relative">
                   <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -124,17 +193,28 @@ function LoginPage() {
                 </div>
               </label>
 
+              <label className="flex items-center gap-2 text-xs text-muted-foreground">
+                <input
+                  type="checkbox"
+                  checked={remember}
+                  onChange={(e) => setRemember(e.target.checked)}
+                  className="h-3.5 w-3.5 rounded border-border accent-[color:var(--color-brand)]"
+                />
+                Keep me signed in
+              </label>
+
               <button
                 type="submit"
-                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-gradient-brand text-sm font-medium text-white shadow-glow transition-transform hover:scale-[1.01]"
+                disabled={submitting || googleLoading}
+                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-gradient-brand text-sm font-medium text-white shadow-glow transition-transform hover:scale-[1.01] disabled:opacity-70"
               >
-                Sign in <ArrowRight className="h-4 w-4" />
+                {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Sign in <ArrowRight className="h-4 w-4" /></>}
               </button>
             </form>
 
             <p className="mt-6 text-center text-xs text-muted-foreground">
               New to InterviewVerse?{" "}
-              <Link to="/dashboard" className="font-medium text-brand hover:underline">
+              <Link to="/signup" className="font-medium text-brand hover:underline">
                 Create an account
               </Link>
             </p>
