@@ -57,14 +57,14 @@ function Landing() {
 
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <Link
-              to="/dashboard"
+              to="/login"
               className="group inline-flex h-12 items-center gap-2 rounded-full bg-gradient-brand px-6 text-sm font-medium text-white shadow-glow transition-all duration-300 hover:scale-[1.02] hover:shadow-elevated"
             >
               Start Your AI Interview
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
             <Link
-              to="/dashboard"
+              to="/login"
               className="inline-flex h-12 items-center gap-2 rounded-full border border-border bg-card px-6 text-sm font-medium text-foreground shadow-soft transition-all duration-300 hover:bg-secondary hover:-translate-y-0.5"
             >
               <Sparkles className="h-4 w-4 text-brand" />
@@ -185,7 +185,7 @@ function Landing() {
               Practice. Improve. Get Hired. Start your first AI interview in under a minute.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Link to="/dashboard" className="inline-flex h-12 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-foreground shadow-elevated transition-all duration-300 hover:scale-[1.02]">
+              <Link to="/login" className="inline-flex h-12 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-foreground shadow-elevated transition-all duration-300 hover:scale-[1.02]">
                 Start Your AI Interview <ArrowRight className="h-4 w-4" />
               </Link>
               <div className="flex items-center gap-2 text-sm text-white/85">
