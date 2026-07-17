@@ -44,15 +44,10 @@ export async function generateInterview(
     },
   );
 
-  console.log("RAW RESPONSE FROM API");
-  console.log(res);
-
   if (res.interview) {
-    console.log("RETURNING res.interview");
     return res.interview;
   }
 
-  console.log("RETURNING res");
   return res;
 }
 
