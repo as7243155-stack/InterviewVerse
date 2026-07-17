@@ -1,12 +1,21 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/site-header";
 import { Mail, Lock, ArrowRight, Eye, EyeOff, Sparkles, Loader2, AlertCircle } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import {
+  getAuthCallbackUrl,
+  getSafeAuthRedirectPath,
+  getSupabaseConfigError,
+  isSupabaseConfigured,
+  supabase,
+} from "@/lib/supabase";
 import { useAuth } from "@/lib/auth-context";
 
 export const Route = createFileRoute("/login")({
   head: () => ({ meta: [{ title: "Sign in — InterviewVerse" }] }),
+  validateSearch: (search: Record<string, unknown>) => ({
+    next: typeof search.next === "string" ? search.next : undefined,
+  }),
   component: LoginPage,
 });
 
@@ -14,13 +23,15 @@ function friendlyError(message: string): string {
   const m = message.toLowerCase();
   if (m.includes("invalid login")) return "Invalid email or password.";
   if (m.includes("email not confirmed")) return "Please verify your email before signing in.";
-  if (m.includes("network")) return "Network issue. Check your connection and try again.";
+  if (m.includes("failed to fetch") || m.includes("network")) {
+    return "Network issue. Check your connection and authentication configuration, then try again.";
+  }
   if (m.includes("popup")) return "Google sign-in was cancelled.";
   return message;
 }
 
 function LoginPage() {
-  const navigate = useNavigate();
+  const search = Route.useSearch();
   const { user, loading: authLoading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,20 +40,30 @@ function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const nextPath = getSafeAuthRedirectPath(search.next);
+
+  const redirectAfterAuth = () => {
+    window.location.replace(nextPath);
+  };
 
   // Already logged in → bounce to dashboard
   useEffect(() => {
-    if (!authLoading && user) navigate({ to: "/dashboard", replace: true });
-  }, [authLoading, user, navigate]);
+    if (!authLoading && user) redirectAfterAuth();
+  }, [authLoading, user, nextPath]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    const configError = getSupabaseConfigError();
+    if (configError) {
+      setError(configError);
+      return;
+    }
     setSubmitting(true);
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
-      navigate({ to: "/dashboard", replace: true });
+      redirectAfterAuth();
     } catch (err) {
       setError(friendlyError(err instanceof Error ? err.message : "Sign in failed."));
     } finally {
@@ -52,11 +73,16 @@ function LoginPage() {
 
   const onGoogle = async () => {
     setError(null);
+    const configError = getSupabaseConfigError();
+    if (configError) {
+      setError(configError);
+      return;
+    }
     setGoogleLoading(true);
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
-        options: { redirectTo: `${window.location.origin}/dashboard` },
+        options: { redirectTo: getAuthCallbackUrl(nextPath) },
       });
       if (error) throw error;
     } catch (err) {
@@ -67,13 +93,18 @@ function LoginPage() {
 
   const onForgot = async () => {
     setError(null);
+    const configError = getSupabaseConfigError();
+    if (configError) {
+      setError(configError);
+      return;
+    }
     if (!email) {
       setError("Enter your email above, then click Forgot.");
       return;
     }
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/login`,
+        redirectTo: `${window.location.origin}/reset-password`,
       });
       if (error) throw error;
       setError("Password reset email sent. Check your inbox.");
@@ -151,6 +182,13 @@ function LoginPage() {
               </div>
             )}
 
+            {!isSupabaseConfigured && !error && (
+              <div className="mb-4 flex items-start gap-2 rounded-xl border border-warning/30 bg-warning/10 p-3 text-xs text-warning-foreground">
+                <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                <span>{getSupabaseConfigError()}</span>
+              </div>
+            )}
+
             <form onSubmit={onSubmit} className="space-y-4">
               <label className="block">
                 <span className="text-xs font-medium text-muted-foreground">Email</span>
@@ -214,7 +252,7 @@ function LoginPage() {
 
             <p className="mt-6 text-center text-xs text-muted-foreground">
               New to InterviewVerse?{" "}
-              <Link to="/signup" className="font-medium text-brand hover:underline">
+              <Link to="/signup" search={{ next: nextPath }} className="font-medium text-brand hover:underline">
                 Create an account
               </Link>
             </p>

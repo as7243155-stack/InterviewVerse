@@ -1,5 +1,5 @@
-import { useEffect, type ReactNode } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useEffect, useRef, type ReactNode } from "react";
+import { useLocation, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@/lib/auth-context";
 import { Sparkles } from "lucide-react";
 
@@ -10,10 +10,16 @@ import { Sparkles } from "lucide-react";
 export function RequireAuth({ children }: { children: ReactNode }) {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const intendedPath = useRef(`${location.pathname}${location.searchStr}`);
 
   useEffect(() => {
     if (!loading && !user) {
-      navigate({ to: "/login", replace: true });
+      navigate({
+        to: "/login",
+        search: { next: intendedPath.current },
+        replace: true,
+      });
     }
   }, [loading, user, navigate]);
 

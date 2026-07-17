@@ -422,14 +422,6 @@ type BackendQuestionLike = BackendInterview["questions"][number];
 
 function InterviewView({ interview }: { interview: BackendInterview }) {
   const questions = interview.questions;
-  console.log("questions variable =", questions);
-  console.log("questions[0] =", questions[0]);
-  console.log("typeof questions[0] =", typeof questions[0]);
-  console.log("Array.isArray(questions) =", Array.isArray(questions));
-
-  console.log("FULL INTERVIEW =", interview);
-  console.log("QUESTIONS =", interview.questions);
-  console.log("FIRST QUESTION =", interview.questions[0]);
   const [i, setI] = useState(-1); // -1 = introduction screen, questions.length = closing
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [recording, setRecording] = useState(false);
@@ -440,10 +432,6 @@ function InterviewView({ interview }: { interview: BackendInterview }) {
   const q = questions[currentIdx];
 
 if (!q && !showIntro && !showClosing) {
-  console.log("Question object is missing!");
-  console.log("questions =", questions);
-  console.log("currentIdx =", currentIdx);
-
   return (
     <div className="p-10 text-red-500">
       Loading question...
@@ -451,10 +439,6 @@ if (!q && !showIntro && !showClosing) {
   );
 }
 
-  console.log("q =", JSON.stringify(q, null, 2));
-  console.log("typeof q =", typeof q);
-  console.log("q.question =", q?.question);
-  console.log("keys =", q ? Object.keys(q) : []);
   const estDuration =
     interview.estimated_duration_minutes ?? interview.estimated_duration ?? 0;
 

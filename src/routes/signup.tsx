@@ -1,12 +1,21 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/site-header";
 import { Mail, Lock, ArrowRight, Eye, EyeOff, Sparkles, Loader2, AlertCircle, User as UserIcon, CheckCircle2 } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import {
+  getAuthCallbackUrl,
+  getSafeAuthRedirectPath,
+  getSupabaseConfigError,
+  isSupabaseConfigured,
+  supabase,
+} from "@/lib/supabase";
 import { useAuth } from "@/lib/auth-context";
 
 export const Route = createFileRoute("/signup")({
   head: () => ({ meta: [{ title: "Create account — InterviewVerse" }] }),
+  validateSearch: (search: Record<string, unknown>) => ({
+    next: typeof search.next === "string" ? search.next : undefined,
+  }),
   component: SignupPage,
 });
 
@@ -17,12 +26,14 @@ function friendlyError(message: string): string {
   if (m.includes("weak") || m.includes("password should be"))
     return "Password is too weak. Use at least 8 characters.";
   if (m.includes("invalid email")) return "Please enter a valid email address.";
-  if (m.includes("network")) return "Network issue. Check your connection and try again.";
+  if (m.includes("failed to fetch") || m.includes("network")) {
+    return "Network issue. Check your connection and authentication configuration, then try again.";
+  }
   return message;
 }
 
 function SignupPage() {
-  const navigate = useNavigate();
+  const search = Route.useSearch();
   const { user, loading: authLoading } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -33,10 +44,15 @@ function SignupPage() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [verifyEmail, setVerifyEmail] = useState(false);
+  const nextPath = getSafeAuthRedirectPath(search.next);
+
+  const redirectAfterAuth = () => {
+    window.location.replace(nextPath);
+  };
 
   useEffect(() => {
-    if (!authLoading && user) navigate({ to: "/dashboard", replace: true });
-  }, [authLoading, user, navigate]);
+    if (!authLoading && user) redirectAfterAuth();
+  }, [authLoading, user, nextPath]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,6 +61,8 @@ function SignupPage() {
     if (!name.trim()) return setError("Please enter your full name.");
     if (password.length < 8) return setError("Password must be at least 8 characters.");
     if (password !== confirm) return setError("Passwords do not match.");
+    const configError = getSupabaseConfigError();
+    if (configError) return setError(configError);
 
     setSubmitting(true);
     try {
@@ -53,14 +71,14 @@ function SignupPage() {
         password,
         options: {
           data: { full_name: name.trim() },
-          emailRedirectTo: `${window.location.origin}/dashboard`,
+          emailRedirectTo: getAuthCallbackUrl(nextPath),
         },
       });
       if (error) throw error;
 
       // If email confirmation is OFF, Supabase returns a session immediately.
       if (data.session) {
-        navigate({ to: "/dashboard", replace: true });
+        redirectAfterAuth();
       } else {
         setVerifyEmail(true);
       }
@@ -73,11 +91,16 @@ function SignupPage() {
 
   const onGoogle = async () => {
     setError(null);
+    const configError = getSupabaseConfigError();
+    if (configError) {
+      setError(configError);
+      return;
+    }
     setGoogleLoading(true);
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
-        options: { redirectTo: `${window.location.origin}/dashboard` },
+        options: { redirectTo: getAuthCallbackUrl(nextPath) },
       });
       if (error) throw error;
     } catch (err) {
@@ -157,6 +180,13 @@ function SignupPage() {
                   <div className="mb-4 flex items-start gap-2 rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-xs text-destructive">
                     <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                     <span>{error}</span>
+                  </div>
+                )}
+
+                {!isSupabaseConfigured && !error && (
+                  <div className="mb-4 flex items-start gap-2 rounded-xl border border-warning/30 bg-warning/10 p-3 text-xs text-warning-foreground">
+                    <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                    <span>{getSupabaseConfigError()}</span>
                   </div>
                 )}
 
@@ -242,7 +272,7 @@ function SignupPage() {
 
                 <p className="mt-6 text-center text-xs text-muted-foreground">
                   Already have an account?{" "}
-                  <Link to="/login" className="font-medium text-brand hover:underline">
+                  <Link to="/login" search={{ next: nextPath }} className="font-medium text-brand hover:underline">
                     Sign in
                   </Link>
                 </p>
