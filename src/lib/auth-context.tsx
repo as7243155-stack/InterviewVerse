@@ -22,23 +22,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    // Register listener first to avoid missing events during initial fetch.
+    // Supabase emits INITIAL_SESSION after subscription, so this single listener
+    // avoids duplicate session reads and stale-session races.
     const { data: sub } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession);
       setLoading(false);
     });
-
-    supabase.auth
-      .getSession()
-      .then(({ data }) => {
-        setSession(data.session);
-      })
-      .catch(() => {
-        setSession(null);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
 
     return () => {
       sub.subscription.unsubscribe();
