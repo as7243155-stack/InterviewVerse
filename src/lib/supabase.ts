@@ -44,6 +44,7 @@ export function getSafeAuthRedirectPath(value: string | null | undefined, fallba
     const origin = typeof window !== "undefined" ? window.location.origin : "https://interviewverse.local";
     const url = new URL(value, origin);
     if (url.origin !== origin) return fallback;
+    if (["/login", "/signup", "/auth/callback", "/reset-password"].includes(url.pathname)) return fallback;
     return `${url.pathname}${url.search}${url.hash}`;
   } catch {
     return fallback;
