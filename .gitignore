@@ -36,3 +36,5 @@ backend/__pycache__/
 backend/.env
 backend/**/*.pyc
 backend/**/__pycache__/
+# Environment variables
+**/.env
