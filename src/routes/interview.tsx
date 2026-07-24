@@ -1,8 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { RequireAuth } from "@/components/require-auth";
-import { generateInterview } from "@/lib/api/services";
+import { generateInterview, evaluateInterview } from "@/lib/api/services";
+import { useEvaluation } from "@/lib/evaluation-context";
 import type { BackendInterview, ExperienceLevel, InterviewType } from "@/lib/types";
 import {
   Mic,
