@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site-header";
 import { RequireAuth } from "@/components/require-auth";
+import { useEvaluation } from "@/lib/evaluation-context";
+import type { BackendEvaluation } from "@/lib/types";
 import {
   CheckCircle2,
   AlertTriangle,
@@ -9,6 +11,7 @@ import {
   Download,
   RefreshCw,
   Sparkles,
+  Inbox,
 } from "lucide-react";
 import {
   RadarChart,
@@ -28,30 +31,78 @@ export const Route = createFileRoute("/results")({
   ),
 });
 
-const SCORE = 8.4;
 const MAX = 10;
 
-const RADAR = [
-  { axis: "Structure", v: 92 },
-  { axis: "Depth", v: 78 },
-  { axis: "Trade-offs", v: 84 },
-  { axis: "Clarity", v: 88 },
-  { axis: "Scalability", v: 72 },
-  { axis: "Communication", v: 90 },
-];
-
-const BREAKDOWN = [
-  { label: "Problem framing", score: 9.2, status: "good" },
-  { label: "Data model design", score: 8.6, status: "good" },
-  { label: "Scalability analysis", score: 7.2, status: "ok" },
-  { label: "Trade-off reasoning", score: 8.4, status: "good" },
-  { label: "Edge case handling", score: 6.8, status: "warn" },
-];
-
 function ResultsPage() {
-  const pct = (SCORE / MAX) * 100;
+  const { evaluation } = useEvaluation();
+
+  if (!evaluation) {
+    return (
+      <div className="min-h-screen bg-background">
+        <SiteHeader variant="app" />
+        <main className="mx-auto max-w-2xl px-6 py-24 text-center">
+          <div className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-brand text-white shadow-glow">
+            <Inbox className="h-6 w-6" />
+          </div>
+          <h1 className="mt-6 text-2xl font-semibold tracking-tight md:text-3xl">
+            No evaluation to show yet
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Finish an interview to see your live evaluation here.
+          </p>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              to="/interview"
+              className="inline-flex h-11 items-center gap-2 rounded-full bg-gradient-brand px-5 text-sm font-medium text-white shadow-glow transition-transform hover:scale-[1.02]"
+            >
+              Start an interview <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              to="/dashboard"
+              className="inline-flex h-11 items-center gap-2 rounded-full border border-border bg-card px-5 text-sm font-medium text-foreground hover:bg-secondary"
+            >
+              Back to dashboard
+            </Link>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  return <ResultsView evaluation={evaluation} />;
+}
+
+function ResultsView({ evaluation }: { evaluation: BackendEvaluation }) {
+  const overall100 = clamp(evaluation.overall_score ?? 0, 0, 100);
+  const score10 = Math.round((overall100 / 10) * 10) / 10; // 0–10 with 1 decimal
+  const pct = overall100;
   const circumference = 2 * Math.PI * 80;
   const offset = circumference - (pct / 100) * circumference;
+
+  const skillEntries = Object.entries(evaluation.skill_breakdown ?? {});
+  const radarData =
+    skillEntries.length > 0
+      ? skillEntries.map(([axis, v]) => ({ axis, v: clamp(Number(v) || 0, 0, 100) }))
+      : [{ axis: "Overall", v: overall100 }];
+
+  const feedback = evaluation.question_feedback ?? [];
+  const strengths = evaluation.strengths ?? [];
+  const weaknesses = evaluation.weaknesses ?? [];
+  const suggestions = evaluation.suggestions ?? [];
+
+  const overallTone =
+    overall100 >= 75
+      ? { label: "Strong overall result", cls: "bg-success/15 text-success" }
+      : overall100 >= 50
+      ? { label: "Solid — room to grow", cls: "bg-warning/15 text-warning" }
+      : { label: "Needs more practice", cls: "bg-destructive/15 text-destructive" };
+
+  const title = evaluation.role
+    ? `${evaluation.role} interview`
+    : "Interview evaluation";
+  const subtitleParts: string[] = [];
+  if (evaluation.question_count) subtitleParts.push(`${evaluation.question_count} questions`);
+  if (evaluation.experience_level) subtitleParts.push(`${evaluation.experience_level} level`);
 
   return (
     <div className="min-h-screen bg-background">
@@ -60,8 +111,10 @@ function ResultsPage() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div className="text-xs font-medium uppercase tracking-wider text-brand">Interview complete</div>
-            <h1 className="mt-1 text-3xl font-semibold tracking-tight md:text-4xl">System Design — URL Shortener</h1>
-            <p className="mt-1 text-sm text-muted-foreground">5 questions • 24 min • Senior level</p>
+            <h1 className="mt-1 text-3xl font-semibold tracking-tight md:text-4xl">{title}</h1>
+            {subtitleParts.length > 0 && (
+              <p className="mt-1 text-sm text-muted-foreground">{subtitleParts.join(" • ")}</p>
+            )}
           </div>
           <div className="flex gap-2">
             <button
@@ -100,31 +153,23 @@ function ResultsPage() {
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <div className="text-5xl font-semibold tracking-tight text-gradient-brand">{SCORE}</div>
+                  <div className="text-5xl font-semibold tracking-tight text-gradient-brand">{score10}</div>
                   <div className="text-xs text-muted-foreground">out of {MAX}</div>
                 </div>
               </div>
             </div>
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full bg-success/15 px-3 py-1 text-xs font-medium text-success">
-                <TrendingUp className="h-3 w-3" /> Strong overall result
+              <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium ${overallTone.cls}`}>
+                <TrendingUp className="h-3 w-3" /> {overallTone.label}
               </div>
-              <h2 className="mt-3 text-2xl font-semibold tracking-tight">Strong performance with room to sharpen edge cases.</h2>
-              <p className="mt-2 text-sm text-muted-foreground max-w-xl">
-                You communicated clearly and structured the problem well. Push deeper on
-                scalability trade-offs and walk through edge cases more explicitly.
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight">Overall summary</h2>
+              <p className="mt-2 text-sm text-muted-foreground max-w-2xl whitespace-pre-line">
+                {evaluation.summary || "No summary was returned for this interview."}
               </p>
               <div className="mt-5 grid grid-cols-3 gap-3 max-w-md">
-                {[
-                  { k: "Questions", v: "5" },
-                  { k: "Duration", v: "24m" },
-                  { k: "Level", v: "Senior" },
-                ].map((s) => (
-                  <div key={s.k} className="rounded-xl border border-border bg-background/50 p-3">
-                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{s.k}</div>
-                    <div className="mt-1 text-sm font-semibold">{s.v}</div>
-                  </div>
-                ))}
+                <Stat k="Score" v={`${overall100}/100`} />
+                <Stat k="Questions" v={String(evaluation.question_count ?? feedback.length ?? 0)} />
+                <Stat k="Level" v={evaluation.experience_level ?? "—"} />
               </div>
             </div>
           </div>
@@ -137,7 +182,7 @@ function ResultsPage() {
             <p className="text-xs text-muted-foreground">How you scored across each competency.</p>
             <div className="mt-2 h-[340px]">
               <ResponsiveContainer width="100%" height="100%">
-                <RadarChart data={RADAR} outerRadius="75%">
+                <RadarChart data={radarData} outerRadius="75%">
                   <defs>
                     <linearGradient id="radarFill" x1="0" y1="0" x2="1" y2="1">
                       <stop offset="0%" stopColor="oklch(0.58 0.23 280)" stopOpacity={0.6} />
@@ -156,33 +201,49 @@ function ResultsPage() {
           {/* Per-question */}
           <div className="rounded-2xl border border-border bg-card shadow-soft">
             <div className="border-b border-border px-6 py-4">
-              <h3 className="text-base font-semibold tracking-tight">Per-question breakdown</h3>
-              <p className="text-xs text-muted-foreground">Each rubric item, scored.</p>
+              <h3 className="text-base font-semibold tracking-tight">Per-question feedback</h3>
+              <p className="text-xs text-muted-foreground">Each answer, scored and reviewed.</p>
             </div>
-            <ul className="divide-y divide-border">
-              {BREAKDOWN.map((b) => (
-                <li key={b.label} className="flex items-center justify-between px-6 py-4">
-                  <div className="flex items-center gap-3">
-                    {b.status === "warn" ? (
-                      <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-warning/15 text-warning">
-                        <AlertTriangle className="h-3.5 w-3.5" />
-                      </span>
-                    ) : (
-                      <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-success/15 text-success">
-                        <CheckCircle2 className="h-3.5 w-3.5" />
-                      </span>
-                    )}
-                    <div className="text-sm font-medium">{b.label}</div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="h-1.5 w-24 overflow-hidden rounded-full bg-secondary">
-                      <div className="h-full rounded-full bg-gradient-brand" style={{ width: `${(b.score / 10) * 100}%` }} />
-                    </div>
-                    <div className="w-10 text-right text-sm font-semibold tabular-nums">{b.score}</div>
-                  </div>
-                </li>
-              ))}
-            </ul>
+            {feedback.length === 0 ? (
+              <div className="px-6 py-8 text-sm text-muted-foreground">
+                No per-question feedback was returned.
+              </div>
+            ) : (
+              <ul className="divide-y divide-border">
+                {feedback.map((b, idx) => {
+                  const status = b.score >= 7 ? "good" : b.score >= 5 ? "ok" : "warn";
+                  return (
+                    <li key={idx} className="px-6 py-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-start gap-3 min-w-0">
+                          {status === "warn" ? (
+                            <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-warning/15 text-warning">
+                              <AlertTriangle className="h-3.5 w-3.5" />
+                            </span>
+                          ) : (
+                            <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-success/15 text-success">
+                              <CheckCircle2 className="h-3.5 w-3.5" />
+                            </span>
+                          )}
+                          <div className="min-w-0">
+                            <div className="text-sm font-medium break-words">{b.question}</div>
+                            {b.feedback && (
+                              <div className="mt-1 text-xs text-muted-foreground break-words">{b.feedback}</div>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3 shrink-0">
+                          <div className="h-1.5 w-20 overflow-hidden rounded-full bg-secondary">
+                            <div className="h-full rounded-full bg-gradient-brand" style={{ width: `${clamp(b.score, 0, 10) * 10}%` }} />
+                          </div>
+                          <div className="w-10 text-right text-sm font-semibold tabular-nums">{b.score}</div>
+                        </div>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </div>
         </div>
 
@@ -193,11 +254,16 @@ function ResultsPage() {
               <CheckCircle2 className="h-3.5 w-3.5" /> What went well
             </div>
             <ul className="mt-4 space-y-3 text-sm">
-              {["Strong problem decomposition before jumping to solutions.",
-                "Clear articulation of API contracts and data model.",
-                "Good instinct for caching layers and read-heavy workloads."].map((t) => (
-                <li key={t} className="flex gap-2"><span className="mt-2 inline-block h-1.5 w-1.5 rounded-full bg-success" /><span>{t}</span></li>
-              ))}
+              {strengths.length === 0 ? (
+                <li className="text-muted-foreground">No strengths were surfaced.</li>
+              ) : (
+                strengths.map((t, i) => (
+                  <li key={i} className="flex gap-2">
+                    <span className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-success" />
+                    <span>{t}</span>
+                  </li>
+                ))
+              )}
             </ul>
           </div>
           <div className="rounded-2xl border border-border bg-card p-6 shadow-soft">
@@ -205,38 +271,42 @@ function ResultsPage() {
               <AlertTriangle className="h-3.5 w-3.5" /> Where to improve
             </div>
             <ul className="mt-4 space-y-3 text-sm">
-              {["Address edge cases explicitly (hot keys, expired URLs).",
-                "Quantify capacity estimates with concrete numbers.",
-                "Spend more time discussing failure modes and recovery."].map((t) => (
-                <li key={t} className="flex gap-2"><span className="mt-2 inline-block h-1.5 w-1.5 rounded-full bg-warning" /><span>{t}</span></li>
-              ))}
+              {weaknesses.length === 0 ? (
+                <li className="text-muted-foreground">No weaknesses were surfaced.</li>
+              ) : (
+                weaknesses.map((t, i) => (
+                  <li key={i} className="flex gap-2">
+                    <span className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-warning" />
+                    <span>{t}</span>
+                  </li>
+                ))
+              )}
             </ul>
           </div>
         </div>
 
         {/* Suggestions */}
-        <div className="mt-6 rounded-2xl border border-border bg-card p-6 shadow-soft">
-          <div className="flex items-center gap-2">
-            <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-gradient-brand text-white shadow-glow">
-              <Sparkles className="h-3.5 w-3.5" />
-            </span>
-            <h3 className="text-base font-semibold tracking-tight">Suggestions to level up</h3>
+        {suggestions.length > 0 && (
+          <div className="mt-6 rounded-2xl border border-border bg-card p-6 shadow-soft">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-gradient-brand text-white shadow-glow">
+                <Sparkles className="h-3.5 w-3.5" />
+              </span>
+              <h3 className="text-base font-semibold tracking-tight">Suggestions to level up</h3>
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">Targeted next steps based on this session.</p>
+            <div className="mt-5 grid gap-3 md:grid-cols-3">
+              {suggestions.map((s, i) => (
+                <div key={i} className="group rounded-xl border border-border bg-background p-4 transition-all hover:border-brand/40 hover:shadow-soft">
+                  <div className="inline-flex items-center rounded-full bg-gradient-soft px-2 py-0.5 text-[10px] font-medium text-brand">
+                    Tip {i + 1}
+                  </div>
+                  <p className="mt-2 text-sm text-foreground">{s}</p>
+                </div>
+              ))}
+            </div>
           </div>
-          <p className="mt-1 text-xs text-muted-foreground">Targeted next steps based on this session.</p>
-          <div className="mt-5 grid gap-3 md:grid-cols-3">
-            {[
-              { title: "Drill: Capacity estimation", body: "Practice back-of-envelope math for QPS, storage, and bandwidth.", tag: "15 min" },
-              { title: "Read: Designing Data-Intensive Apps — Ch. 6", body: "Sharpen partitioning and replication trade-offs.", tag: "Reading" },
-              { title: "Mock: Edge-case focused", body: "Run a session emphasizing failure modes and recovery.", tag: "20 min" },
-            ].map((s) => (
-              <div key={s.title} className="group rounded-xl border border-border bg-background p-4 transition-all hover:border-brand/40 hover:shadow-soft">
-                <div className="inline-flex items-center rounded-full bg-gradient-soft px-2 py-0.5 text-[10px] font-medium text-brand">{s.tag}</div>
-                <div className="mt-2 text-sm font-semibold">{s.title}</div>
-                <p className="mt-1 text-xs text-muted-foreground">{s.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+        )}
 
         {/* CTA */}
         <div className="mt-6 relative overflow-hidden rounded-2xl border border-border bg-gradient-brand p-6 text-white shadow-elevated">
@@ -245,16 +315,29 @@ function ResultsPage() {
             <div className="flex items-center gap-3">
               <Sparkles className="h-5 w-5" />
               <div>
-                <div className="font-semibold">Try a focused drill on edge cases.</div>
-                <div className="text-sm text-white/80">15 minutes • generated from your weak spots.</div>
+                <div className="font-semibold">Ready for another round?</div>
+                <div className="text-sm text-white/80">Practice again to strengthen your weak spots.</div>
               </div>
             </div>
             <Link to="/interview" className="inline-flex h-10 items-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-foreground shadow-soft transition-transform hover:scale-[1.02]">
-              Start drill <ArrowRight className="h-4 w-4" />
+              Start new interview <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
       </main>
     </div>
   );
+}
+
+function Stat({ k, v }: { k: string; v: string }) {
+  return (
+    <div className="rounded-xl border border-border bg-background/50 p-3">
+      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{k}</div>
+      <div className="mt-1 text-sm font-semibold">{v}</div>
+    </div>
+  );
+}
+
+function clamp(n: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, n));
 }
