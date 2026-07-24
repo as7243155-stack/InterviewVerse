@@ -12,7 +12,9 @@ import { apiFetch } from "./client";
 import { API_ENDPOINTS } from "./config";
 import type {
   Answer,
+  BackendEvaluation,
   BackendInterview,
+  BackendQuestion,
   DashboardStats,
   EvaluationResult,
   GenerateInterviewParams,
@@ -49,6 +51,21 @@ export async function generateInterview(
   }
 
   return res;
+}
+
+/**
+ * Calls the FastAPI `/evaluate` endpoint with the questions, answers, and
+ * role, and returns the raw evaluation payload.
+ */
+export async function evaluateInterview(payload: {
+  questions: BackendQuestion[];
+  answers: Record<number, string>;
+  role: string;
+}): Promise<BackendEvaluation> {
+  return apiFetch<BackendEvaluation>(API_ENDPOINTS.interviews.evaluate, {
+    method: "POST",
+    body: payload,
+  });
 }
 
 
