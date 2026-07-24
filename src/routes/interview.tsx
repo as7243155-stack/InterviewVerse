@@ -426,6 +426,37 @@ function InterviewView({ interview }: { interview: BackendInterview }) {
   const [i, setI] = useState(-1); // -1 = introduction screen, questions.length = closing
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [recording, setRecording] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const { setEvaluation } = useEvaluation();
+  const navigate = useNavigate();
+
+  async function handleFinishInterview() {
+    if (submitting) return;
+    setSubmitting(true);
+    setSubmitError(null);
+    try {
+      const result = await evaluateInterview({
+        questions,
+        answers,
+        role: interview.role,
+      });
+      setEvaluation({
+        ...result,
+        role: interview.role,
+        experience_level: interview.experience_level,
+        question_count: questions.length,
+      });
+      navigate({ to: "/results" });
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error
+          ? err.message
+          : "We couldn't score this interview. Please try again.",
+      );
+      setSubmitting(false);
+    }
+  }
 
   const showIntro = i === -1;
   const showClosing = i === questions.length;
@@ -562,12 +593,21 @@ if (!q && !showIntro && !showClosing) {
                 {interview.closing}
               </p>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-                <Link
-                  to="/results"
-                  className="inline-flex h-11 items-center gap-2 rounded-full bg-gradient-brand px-6 text-sm font-medium text-white shadow-glow transition-transform hover:scale-[1.02]"
+                <button
+                  onClick={handleFinishInterview}
+                  disabled={submitting}
+                  className="inline-flex h-11 items-center gap-2 rounded-full bg-gradient-brand px-6 text-sm font-medium text-white shadow-glow transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
                 >
-                  View your evaluation <ArrowRight className="h-4 w-4" />
-                </Link>
+                  {submitting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" /> Scoring your interview…
+                    </>
+                  ) : (
+                    <>
+                      View your evaluation <ArrowRight className="h-4 w-4" />
+                    </>
+                  )}
+                </button>
                 <Link
                   to="/dashboard"
                   className="inline-flex h-11 items-center gap-2 rounded-full border border-border bg-card px-5 text-sm font-medium text-foreground hover:bg-secondary"
@@ -575,6 +615,14 @@ if (!q && !showIntro && !showClosing) {
                   Back to dashboard
                 </Link>
               </div>
+              {submitError && (
+                <div className="mx-auto mt-4 max-w-xl rounded-xl border border-destructive/30 bg-destructive/5 px-4 py-3 text-left text-sm text-destructive">
+                  <div className="flex items-start gap-2">
+                    <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                    <span>{submitError}</span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         ) : (
