@@ -106,6 +106,26 @@ export interface EvaluationResult {
   evaluatedAt: string;
 }
 
+/** Raw evaluation payload returned by the FastAPI `/evaluate` endpoint. */
+export interface BackendEvaluationQuestionFeedback {
+  question: string;
+  score: number; // 0–10
+  feedback: string;
+}
+
+export interface BackendEvaluation {
+  summary: string;
+  overall_score: number; // 0–100
+  skill_breakdown: Record<string, number>; // 0–100 per skill
+  question_feedback: BackendEvaluationQuestionFeedback[];
+  strengths: string[];
+  weaknesses: string[];
+  suggestions: string[];
+  role?: string;
+  question_count?: number;
+  experience_level?: string;
+}
+
 export interface DashboardStats {
   totalInterviews: number;
   averageScore: number;
